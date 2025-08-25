@@ -108,11 +108,98 @@ impl AniListClient {
             .send()
             .await?;
 
+        // Handle HTTP status codes
+        let status = response.status();
+        match status.as_u16() {
+            200..=299 => {
+                // Success, continue processing
+            }
+            400 => {
+                let error_text = response.text().await.unwrap_or_else(|_| "Bad Request".to_string());
+                return Err(AniListError::BadRequest {
+                    message: error_text,
+                });
+            }
+            401 => {
+                return Err(AniListError::AuthenticationRequired);
+            }
+            403 => {
+                return Err(AniListError::AccessDenied);
+            }
+            404 => {
+                return Err(AniListError::NotFound);
+            }
+            429 => {
+                // Rate limit exceeded - extract rate limit headers
+                let headers = response.headers();
+                
+                // Try to get detailed rate limit information
+                if let (
+                    Some(limit_header),
+                    Some(remaining_header),
+                    Some(reset_header),
+                    Some(retry_after_header),
+                ) = (
+                    headers.get("X-RateLimit-Limit"),
+                    headers.get("X-RateLimit-Remaining"),
+                    headers.get("X-RateLimit-Reset"),
+                    headers.get("Retry-After"),
+                ) {
+                    let limit = limit_header.to_str().unwrap_or("90").parse().unwrap_or(90);
+                    let remaining = remaining_header.to_str().unwrap_or("0").parse().unwrap_or(0);
+                    let reset_at = reset_header.to_str().unwrap_or("0").parse().unwrap_or(0);
+                    let retry_after = retry_after_header.to_str().unwrap_or("60").parse().unwrap_or(60);
+                    
+                    return Err(AniListError::RateLimit {
+                        limit,
+                        remaining,
+                        reset_at,
+                        retry_after,
+                    });
+                } else {
+                    // Fallback if headers are not available
+                    return Err(AniListError::RateLimitSimple);
+                }
+            }
+            500..=599 => {
+                let error_text = response.text().await.unwrap_or_else(|_| "Server Error".to_string());
+                return Err(AniListError::ServerError {
+                    status: status.as_u16(),
+                    message: error_text,
+                });
+            }
+            _ => {
+                let error_text = response.text().await.unwrap_or_else(|_| "Unknown Error".to_string());
+                return Err(AniListError::ServerError {
+                    status: status.as_u16(),
+                    message: error_text,
+                });
+            }
+        }
+
         let json: Value = response.json().await?;
 
+        // Check for GraphQL errors
         if let Some(errors) = json.get("errors") {
+            let error_message = if errors.is_array() {
+                errors.as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|e| e.get("message").and_then(|m| m.as_str()).unwrap_or("Unknown error"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            } else {
+                errors.to_string()
+            };
+            
+            // Check if it's a rate limit error in GraphQL response
+            if error_message.to_lowercase().contains("rate limit") || 
+               error_message.to_lowercase().contains("too many requests") {
+                return Err(AniListError::BurstLimit);
+            }
+            
             return Err(AniListError::GraphQL {
-                message: errors.to_string(),
+                message: error_message,
             });
         }
 
