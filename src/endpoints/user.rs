@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::user::User;
+use crate::models::media_list::MediaList;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -11,6 +12,205 @@ pub struct UserEndpoint {
 impl UserEndpoint {
     pub(crate) fn new(client: AniListClient) -> Self {
         Self { client }
+    }
+
+    /// Get the currently authenticated user (requires token)
+    pub async fn get_current_user(&self) -> Result<User, AniListError> {
+        let query = r#"
+            query {
+                Viewer {
+                    id
+                    name
+                    about
+                    avatar {
+                        large
+                        medium
+                    }
+                    bannerImage
+                    options {
+                        titleLanguage
+                        displayAdultContent
+                        airingNotifications
+                        profileColor
+                        timezone
+                        activityMergeTime
+                        staffNameLanguage
+                    }
+                    mediaListOptions {
+                        scoreFormat
+                        rowOrder
+                        animeList {
+                            sectionOrder
+                            splitCompletedSectionByFormat
+                            customLists
+                            advancedScoring
+                            advancedScoringEnabled
+                        }
+                        mangaList {
+                            sectionOrder
+                            splitCompletedSectionByFormat
+                            customLists
+                            advancedScoring
+                            advancedScoringEnabled
+                        }
+                    }
+                    favourites {
+                        anime {
+                            nodes {
+                                id
+                                title {
+                                    userPreferred
+                                }
+                            }
+                        }
+                        manga {
+                            nodes {
+                                id
+                                title {
+                                    userPreferred
+                                }
+                            }
+                        }
+                        characters {
+                            nodes {
+                                id
+                                name {
+                                    userPreferred
+                                }
+                            }
+                        }
+                        staff {
+                            nodes {
+                                id
+                                name {
+                                    userPreferred
+                                }
+                            }
+                        }
+                        studios {
+                            nodes {
+                                id
+                                name
+                            }
+                        }
+                    }
+                    statistics {
+                        anime {
+                            count
+                            meanScore
+                            standardDeviation
+                            minutesWatched
+                            episodesWatched
+                        }
+                        manga {
+                            count
+                            meanScore
+                            standardDeviation
+                            chaptersRead
+                            volumesRead
+                        }
+                    }
+                    unreadNotificationCount
+                    siteUrl
+                    donatorTier
+                    donatorBadge
+                    moderatorRoles
+                    createdAt
+                    updatedAt
+                }
+            }
+        "#;
+
+        let response = self.client.query(query, None).await?;
+        let data = response["data"]["Viewer"].clone();
+        let user: User = serde_json::from_value(data)?;
+        Ok(user)
+    }
+
+    /// Get the current user's anime list (requires token)
+    pub async fn get_current_user_anime_list(&self, status: Option<&str>) -> Result<Vec<MediaList>, AniListError> {
+        // For now, we'll use a simpler approach
+        let query = r#"
+            query ($userId: Int, $type: MediaType, $status: MediaListStatus) {
+                MediaListCollection(userId: $userId, type: $type, status: $status) {
+                    lists {
+                        entries {
+                            id
+                            userId
+                            mediaId
+                            status
+                            score
+                            progress
+                            progressVolumes
+                            repeat
+                            priority
+                            private
+                            notes
+                            hiddenFromStatusLists
+                            startedAt {
+                                year
+                                month
+                                day
+                            }
+                            completedAt {
+                                year
+                                month
+                                day
+                            }
+                            updatedAt
+                            createdAt
+                            media {
+                                id
+                                title {
+                                    romaji
+                                    english
+                                    native
+                                    userPreferred
+                                }
+                                coverImage {
+                                    extraLarge
+                                    large
+                                    medium
+                                    color
+                                }
+                                format
+                                status
+                                episodes
+                                season
+                                seasonYear
+                                averageScore
+                                genres
+                            }
+                        }
+                    }
+                }
+            }
+        "#;
+
+        let mut variables = HashMap::new();
+        variables.insert("type".to_string(), json!("ANIME"));
+        
+        if let Some(status) = status {
+            variables.insert("status".to_string(), json!(status.to_uppercase()));
+        }
+
+        let response = self.client.query(query, Some(variables)).await?;
+        
+        // Extract entries from all lists
+        let mut all_entries = Vec::new();
+        if let Some(lists) = response["data"]["MediaListCollection"]["lists"].as_array() {
+            for list in lists {
+                if let Some(entries) = list["entries"].as_array() {
+                    for entry in entries {
+                        if let Ok(media_list) = serde_json::from_value::<MediaList>(entry.clone()) {
+                            all_entries.push(media_list);
+                        }
+                    }
+                }
+            }
+        }
+        
+        Ok(all_entries)
     }
 
     /// Get user by ID

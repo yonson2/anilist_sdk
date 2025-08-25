@@ -11,12 +11,23 @@ const ANILIST_API_URL: &str = "https://graphql.anilist.co";
 #[derive(Clone)]
 pub struct AniListClient {
     client: Client,
+    token: Option<String>,
 }
 
 impl AniListClient {
+    /// Create a new unauthenticated client
     pub fn new() -> Self {
         Self {
             client: Client::new(),
+            token: None,
+        }
+    }
+
+    /// Create a new authenticated client with an access token
+    pub fn with_token(token: String) -> Self {
+        Self {
+            client: Client::new(),
+            token: Some(token),
         }
     }
 
@@ -52,10 +63,17 @@ impl AniListClient {
             body.insert("variables", Value::Object(vars.into_iter().collect()));
         }
 
-        let response = self
+        let mut request = self
             .client
             .post(ANILIST_API_URL)
-            .header("Content-Type", "application/json")
+            .header("Content-Type", "application/json");
+
+        // Add authorization header if token is present
+        if let Some(token) = &self.token {
+            request = request.header("Authorization", format!("Bearer {}", token));
+        }
+
+        let response = request
             .json(&body)
             .send()
             .await?;

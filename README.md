@@ -5,6 +5,7 @@ A comprehensive, modular Rust wrapper for the AniList GraphQL API.
 ## Features
 
 - **Modular Design**: Separate endpoints for anime, manga, characters, staff, and users
+- **Authentication Support**: Both authenticated and unauthenticated clients
 - **Async/Await Support**: Built with Tokio for asynchronous operations
 - **Type Safety**: Strongly typed responses with Serde serialization
 - **Comprehensive Coverage**: Supports popular, trending, search, and detailed queries
@@ -22,6 +23,61 @@ anilist-moe = "0.1.0"
 tokio = { version = "1.0", features = ["full"] }
 ```
 
+## API Endpoints
+
+### Public Endpoints (No Authentication Required)
+
+All clients (authenticated and unauthenticated) can access these endpoints:
+
+#### Anime
+- `get_popular(page, per_page)` - Get popular anime
+- `get_trending(page, per_page)` - Get trending anime
+- `get_by_id(id)` - Get anime by ID
+- `search(query, page, per_page)` - Search anime by title
+- `get_by_season(season, year, page, per_page)` - Get anime by season/year
+- `get_top_rated(page, per_page)` - Get highest rated anime
+- `get_airing(page, per_page)` - Get currently airing anime
+
+#### Manga
+- `get_popular(page, per_page)` - Get popular manga
+- `get_trending(page, per_page)` - Get trending manga
+- `get_by_id(id)` - Get manga by ID
+- `search(query, page, per_page)` - Search manga by title
+- `get_top_rated(page, per_page)` - Get highest rated manga
+- `get_releasing(page, per_page)` - Get currently releasing manga
+- `get_completed(page, per_page)` - Get completed manga
+
+#### Characters
+- `get_popular(page, per_page)` - Get popular characters
+- `get_by_id(id)` - Get character by ID
+- `search(query, page, per_page)` - Search characters by name
+- `get_by_birthday(month, day, page, per_page)` - Get characters by birthday
+- `get_most_favorited(page, per_page)` - Get most favorited characters
+
+#### Staff
+- `get_popular(page, per_page)` - Get popular staff
+- `get_by_id(id)` - Get staff by ID
+- `search(query, page, per_page)` - Search staff by name
+- `get_by_birthday(month, day, page, per_page)` - Get staff by birthday
+- `get_most_favorited(page, per_page)` - Get most favorited staff
+
+#### Users (Public Data)
+- `get_by_id(id)` - Get user by ID
+- `get_by_name(name)` - Get user by username
+- `search(query, page, per_page)` - Search users
+- `get_most_anime_watched(page, per_page)` - Get users with most anime watched
+- `get_most_manga_read(page, per_page)` - Get users with most manga read
+
+### Authenticated Endpoints (Requires Access Token)
+
+These endpoints require an authenticated client created with `AniListClient::with_token()`:
+
+#### User (Private Data)
+- `get_current_user()` - Get current authenticated user's profile
+- `get_current_user_anime_list(status)` - Get current user's anime list
+
+*Note: More authenticated endpoints will be added in future versions for list management, favorites, etc.*
+
 ## Usage Examples
 
 ### Basic Usage
@@ -31,6 +87,7 @@ use anilist_moe::client::AniListClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Create an unauthenticated client for public data
     let client = AniListClient::new();
     
     // Get popular anime
@@ -40,6 +97,40 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 ```
+
+### Authenticated Client
+
+For accessing user-specific data, you'll need an authenticated client:
+
+```rust
+use anilist_moe::client::AniListClient;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Create an authenticated client (requires AniList access token)
+    let token = "your_access_token_here".to_string();
+    let client = AniListClient::with_token(token);
+    
+    // Get current user information
+    let current_user = client.user().get_current_user().await?;
+    println!("Current user: {}", current_user.name);
+    
+    // Get current user's anime list
+    let anime_list = client.user().get_current_user_anime_list(Some("CURRENT")).await?;
+    println!("Currently watching {} anime", anime_list.len());
+    
+    Ok(())
+}
+```
+
+#### Getting an Access Token
+
+To get an access token for authentication:
+
+1. Register your application at [AniList Developer Console](https://anilist.co/settings/developer)
+2. Implement OAuth2 flow to get user authorization
+3. Exchange authorization code for access token
+4. Use the access token with `AniListClient::with_token()`
 
 ### Anime Operations
 
