@@ -26,7 +26,7 @@ pub struct Anime {
     pub hashtag: Option<String>,
     #[serde(rename="countryOfOrgin")]
     pub country_of_origin: Option<String>,
-    #[serde(rename="isAdukt")]
+    #[serde(rename="isAdult")]
     pub is_adult: Option<bool>,
     #[serde(rename="nextAiringEpisode")]
     pub next_airing_episode: Option<AiringSchedule>,

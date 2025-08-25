@@ -33,7 +33,7 @@ async fn test_get_anime_by_id() {
     let client = AniListClient::new();
     // Using Attack on Titan's ID (16498)
     let result = client.anime().get_by_id(16498).await;
-    println!("{:#?}",result.as_ref().unwrap());
+    
     assert!(result.is_ok());
     let anime = result.unwrap();
     assert_eq!(anime.id, 16498);
