@@ -1,5 +1,7 @@
 use crate::endpoints::{
     AnimeEndpoint, CharacterEndpoint, MangaEndpoint, StaffEndpoint, UserEndpoint,
+    StudioEndpoint, ForumEndpoint, ActivityEndpoint, ReviewEndpoint, 
+    RecommendationEndpoint, AiringEndpoint, NotificationEndpoint,
 };
 use crate::error::AniListError;
 use reqwest::Client;
@@ -49,6 +51,34 @@ impl AniListClient {
 
     pub fn user(&self) -> UserEndpoint {
         UserEndpoint::new(self.clone())
+    }
+
+    pub fn studio(&self) -> StudioEndpoint {
+        StudioEndpoint::new(self.clone())
+    }
+
+    pub fn forum(&self) -> ForumEndpoint {
+        ForumEndpoint::new(self.clone())
+    }
+
+    pub fn activity(&self) -> ActivityEndpoint {
+        ActivityEndpoint::new(self.clone())
+    }
+
+    pub fn review(&self) -> ReviewEndpoint {
+        ReviewEndpoint::new(self.clone())
+    }
+
+    pub fn recommendation(&self) -> RecommendationEndpoint {
+        RecommendationEndpoint::new(self.clone())
+    }
+
+    pub fn airing(&self) -> AiringEndpoint {
+        AiringEndpoint::new(self.clone())
+    }
+
+    pub fn notification(&self) -> NotificationEndpoint {
+        NotificationEndpoint::new(self.clone())
     }
 
     pub(crate) async fn query(

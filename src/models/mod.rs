@@ -4,6 +4,7 @@ pub mod manga;
 pub mod staff;
 pub mod user;
 pub mod media_list;
+pub mod social;
 
 // Re-export specific types to avoid ambiguity
 pub use anime::{
@@ -19,3 +20,10 @@ pub use user::{
     MediaListTypeOptions, Favourites, UserStatistics, UserStatisticsType
 };
 pub use media_list::{MediaList, MediaListStatus, MediaListMedia};
+pub use social::{
+    Studio as SocialStudio, Thread, ThreadCategory, ThreadUser, ThreadComment,
+    Review, ReviewUser, ReviewMedia, Recommendation, RecommendationUser, RecommendationMedia,
+    Activity, TextActivity, ListActivity, MessageActivity, ActivityReply,
+    Notification, NotificationUser, NotificationMedia, AiringSchedule as SocialAiringSchedule,
+    AiringMedia, ActivityType, NotificationType, ReviewRating, RecommendationRating, MediaType
+};

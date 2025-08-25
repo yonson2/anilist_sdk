@@ -26,7 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // In a real application, you would get this token from AniList OAuth flow
     // For now, we'll show how to create the client (but not use it since we don't have a real token)
     let token = "your_access_token_here".to_string();
-    let authenticated_client = AniListClient::with_token(token);
+    let _authenticated_client = AniListClient::with_token(token);
     
     println!("Authenticated client created with token support.");
     println!("To use authenticated features:");

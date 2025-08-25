@@ -4,14 +4,35 @@ A comprehensive, modular Rust wrapper for the AniList GraphQL API.
 
 ## Features
 
-- **Modular Design**: Separate endpoints for anime, manga, characters, staff, and users
+- **Modular Design**: Separate endpoints for all AniList features
 - **Authentication Support**: Both authenticated and unauthenticated clients
 - **Async/Await Support**: Built with Tokio for asynchronous operations
 - **Type Safety**: Strongly typed responses with Serde serialization
-- **Comprehensive Coverage**: Supports popular, trending, search, and detailed queries
+- **Comprehensive Coverage**: Full AniList API coverage including social features
 - **Error Handling**: Proper error types for different failure scenarios
 - **Pagination**: Built-in support for paginated results
 - **Tested**: Comprehensive test suite covering all endpoints
+
+## Supported Endpoints
+
+### Core Content
+- **Anime**: Popular, trending, search, seasonal, top-rated, airing
+- **Manga**: Popular, trending, search, top-rated, releasing, completed
+- **Characters**: Popular, search, by ID, with media roles
+- **Staff**: Popular, search, by ID, with media roles
+- **Studios**: Search, by ID, with media productions
+
+### Social & Community
+- **Users**: Profiles, statistics, favorites, lists, followers
+- **Forums**: Threads, comments, categories, search
+- **Activities**: Text activities, list updates, replies, likes
+- **Reviews**: Create, read, update, delete user reviews
+- **Recommendations**: Browse and manage anime/manga recommendations
+- **Notifications**: Read, manage, and mark as read
+
+### Scheduling & Discovery
+- **Airing Schedules**: Upcoming episodes, recently aired, date ranges
+- **Trending & Popular**: Real-time trending content across all types
 
 ## Quick Start
 
@@ -21,6 +42,15 @@ Add this to your `Cargo.toml`:
 [dependencies]
 anilist-moe = "0.1.0"
 tokio = { version = "1.0", features = ["full"] }
+```
+
+## Authentication
+
+For endpoints requiring authentication, set up your environment:
+
+```bash
+# Get your token from https://anilist.co/settings/developer
+export ANILIST_TOKEN="your_access_token_here"
 ```
 
 ## API Endpoints
