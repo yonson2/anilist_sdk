@@ -159,12 +159,12 @@ impl CharacterEndpoint {
         Ok(characters)
     }
 
-    /// Get characters by birthday (month and day)
-    pub async fn get_by_birthday(&self, month: i32, day: i32, page: i32, per_page: i32) -> Result<Vec<Character>, AniListError> {
-        let query = r#"
-            query ($month: Int, $day: Int, $page: Int, $perPage: Int) {
+    /// Get characters who have birthday today
+    pub async fn get_today_birthday(&self, page: i32, per_page: i32) -> Result<Vec<Character>, AniListError> {
+        let query: &'static str = r#"
+            query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
-                    characters(sort: FAVOURITES_DESC) {
+                    characters(sort: FAVOURITES_DESC, isBirthday: true) {
                         id
                         name {
                             first
@@ -196,23 +196,12 @@ impl CharacterEndpoint {
         "#;
 
         let mut variables = HashMap::new();
-        variables.insert("month".to_string(), json!(month));
-        variables.insert("day".to_string(), json!(day));
         variables.insert("page".to_string(), json!(page));
         variables.insert("perPage".to_string(), json!(per_page));
 
         let response = self.client.query(query, Some(variables)).await?;
         let data = response["data"]["Page"]["characters"].clone();
-        let mut characters: Vec<Character> = serde_json::from_value(data)?;
-        
-        // Filter characters with matching birthday
-        characters.retain(|character| {
-            if let Some(birth_date) = &character.date_of_birth {
-                birth_date.month == Some(month) && birth_date.day == Some(day)
-            } else {
-                false
-            }
-        });
+        let characters: Vec<Character> = serde_json::from_value(data)?;
         
         Ok(characters)
     }

@@ -4,12 +4,13 @@ use anilist_moe::client::AniListClient;
 async fn test_get_user_by_id() {
     let client = AniListClient::new();
     // Using a known user ID (this might fail if the user doesn't exist)
-    let result = client.user().get_by_id(1).await;
+    let result = client.user().get_by_id(5429396).await;
+    println!("{:#?}", result);
     
     // This test might fail if the user doesn't exist, so we just check that the call works
     match result {
         Ok(user) => {
-            assert_eq!(user.id, 1);
+            assert_eq!(user.id, 5429396);
             assert!(!user.name.is_empty());
         }
         Err(_) => {
@@ -22,12 +23,12 @@ async fn test_get_user_by_id() {
 async fn test_get_user_by_name() {
     let client = AniListClient::new();
     // This test might fail if the specific user doesn't exist
-    let result = client.user().get_by_name("TestUser").await;
+    let result = client.user().get_by_name("xSensei").await;
     
     // This is expected to potentially fail, so we don't assert on success
     match result {
         Ok(user) => {
-            assert_eq!(user.name, "TestUser");
+            assert_eq!(user.name, "xSensei");
         }
         Err(_) => {
             // User might not exist, which is acceptable for this test
@@ -38,7 +39,8 @@ async fn test_get_user_by_name() {
 #[tokio::test]
 async fn test_search_users() {
     let client = AniListClient::new();
-    let result = client.user().search("test", 1, 5).await;
+    let result = client.user().search("xuehua", 1, 5).await;
+    print!("{:#?}", result);
     
     assert!(result.is_ok());
     let users = result.unwrap();

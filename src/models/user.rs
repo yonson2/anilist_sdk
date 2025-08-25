@@ -24,9 +24,9 @@ pub struct User {
     #[serde(rename = "siteUrl")]
     pub site_url: Option<String>,
     #[serde(rename = "donatorTier")]
-    pub donation_tier: Option<i32>,
-    #[serde(rename = "donationBadge")]
-    pub donation_badge: Option<String>,
+    pub donator_tier: Option<i32>,
+    #[serde(rename = "donatorBadge")]
+    pub donator_badge: Option<String>,
     #[serde(rename = "moderatorRoles")]
     pub moderator_roles: Option<Vec<String>>,
     #[serde(rename = "createdAt")]

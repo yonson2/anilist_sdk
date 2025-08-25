@@ -1,10 +1,11 @@
 use anilist_moe::client::AniListClient;
+use chrono::prelude::*;
 
 #[tokio::test]
 async fn test_get_popular_staff() {
     let client = AniListClient::new();
     let result = client.staff().get_popular(1, 5).await;
-    
+
     assert!(result.is_ok());
     let staff_list = result.unwrap();
     assert!(!staff_list.is_empty());
@@ -20,12 +21,13 @@ async fn test_get_popular_staff() {
 #[tokio::test]
 async fn test_get_staff_by_id() {
     let client = AniListClient::new();
-    // Using Hayao Miyazaki's ID (1870)
-    let result = client.staff().get_by_id(1870).await;
+    // Using Ikue Ootani's ID (95128)
+    let result = client.staff().get_by_id(95128).await;
+    println!("{:#?}", result.as_ref().unwrap());
     
     assert!(result.is_ok());
     let staff = result.unwrap();
-    assert_eq!(staff.id, 1870);
+    assert_eq!(staff.id, 95128);
     assert!(staff.name.is_some());
 }
 
@@ -51,10 +53,12 @@ async fn test_search_staff() {
 }
 
 #[tokio::test]
-async fn test_get_staff_by_birthday() {
+async fn test_get_staff_today_birthday() {
     let client = AniListClient::new();
-    // Test with a specific date (January 5)
-    let result = client.staff().get_by_birthday(1, 5, 1, 10).await;
+    let today = Local::now().date_naive();
+    let day = today.day() as i32;
+    let month = today.month() as i32;
+    let result = client.staff().get_today_birthday(1, 10).await;
     
     assert!(result.is_ok());
     let staff_list = result.unwrap();
@@ -63,8 +67,8 @@ async fn test_get_staff_by_birthday() {
     for staff in &staff_list {
         assert!(staff.id > 0);
         if let Some(birth_date) = &staff.date_of_birth {
-            assert_eq!(birth_date.month, Some(1));
-            assert_eq!(birth_date.day, Some(5));
+            assert_eq!(birth_date.month, Some(month));
+            assert_eq!(birth_date.day, Some(day));
         }
     }
 }

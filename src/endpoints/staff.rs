@@ -176,12 +176,12 @@ impl StaffEndpoint {
         Ok(staff_list)
     }
 
-    /// Get staff by birthday (month and day)
-    pub async fn get_by_birthday(&self, month: i32, day: i32, page: i32, per_page: i32) -> Result<Vec<Staff>, AniListError> {
+    /// Get staff by birthday (today)
+    pub async fn get_today_birthday(&self, page: i32, per_page: i32) -> Result<Vec<Staff>, AniListError> {
         let query = r#"
-            query ($month: Int, $day: Int, $page: Int, $perPage: Int) {
+            query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
-                    staff(sort: FAVOURITES_DESC) {
+                    staff(sort: FAVOURITES_DESC, isBirthday: true) {
                         id
                         name {
                             first
@@ -214,23 +214,12 @@ impl StaffEndpoint {
         "#;
 
         let mut variables = HashMap::new();
-        variables.insert("month".to_string(), json!(month));
-        variables.insert("day".to_string(), json!(day));
         variables.insert("page".to_string(), json!(page));
         variables.insert("perPage".to_string(), json!(per_page));
 
         let response = self.client.query(query, Some(variables)).await?;
         let data = response["data"]["Page"]["staff"].clone();
-        let mut staff_list: Vec<Staff> = serde_json::from_value(data)?;
-        
-        // Filter staff with matching birthday
-        staff_list.retain(|staff| {
-            if let Some(birth_date) = &staff.date_of_birth {
-                birth_date.month == Some(month) && birth_date.day == Some(day)
-            } else {
-                false
-            }
-        });
+        let staff_list: Vec<Staff> = serde_json::from_value(data)?;
         
         Ok(staff_list)
     }

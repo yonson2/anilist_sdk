@@ -1,4 +1,5 @@
 use anilist_moe::client::AniListClient;
+use chrono::prelude::*;
 
 #[tokio::test]
 async fn test_get_popular_characters() {
@@ -51,10 +52,13 @@ async fn test_search_characters() {
 }
 
 #[tokio::test]
-async fn test_get_characters_by_birthday() {
+async fn test_get_characters_today_birthday() {
     let client = AniListClient::new();
-    // Test with a specific date (March 15)
-    let result = client.character().get_by_birthday(3, 15, 1, 10).await;
+    let today = Local::now().date_naive();
+    let day = today.day() as i32;
+    let month = today.month() as i32;
+    let result = client.character().get_today_birthday(1, 10).await;
+    println!("{:#?}", result.as_ref().unwrap());
     
     assert!(result.is_ok());
     let characters = result.unwrap();
@@ -63,8 +67,8 @@ async fn test_get_characters_by_birthday() {
     for character in &characters {
         assert!(character.id > 0);
         if let Some(birth_date) = &character.date_of_birth {
-            assert_eq!(birth_date.month, Some(3));
-            assert_eq!(birth_date.day, Some(15));
+            assert_eq!(birth_date.month, Some(month));
+            assert_eq!(birth_date.day, Some(day));
         }
     }
 }

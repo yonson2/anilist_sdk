@@ -114,8 +114,8 @@ impl UserEndpoint {
                     }
                     unreadNotificationCount
                     siteUrl
-                    donationTier
-                    donationBadge
+                    donatorTier
+                    donatorBadge
                     moderatorRoles
                     createdAt
                     updatedAt
@@ -233,8 +233,8 @@ impl UserEndpoint {
                     }
                     unreadNotificationCount
                     siteUrl
-                    donationTier
-                    donationBadge
+                    donatorTier
+                    donatorBadge
                     moderatorRoles
                     createdAt
                     updatedAt
@@ -280,7 +280,7 @@ impl UserEndpoint {
                             }
                         }
                         siteUrl
-                        donationTier
+                        donatorTier
                         createdAt
                         updatedAt
                     }
@@ -326,7 +326,7 @@ impl UserEndpoint {
                             }
                         }
                         siteUrl
-                        donationTier
+                        donatorTier
                         createdAt
                     }
                 }
@@ -370,7 +370,7 @@ impl UserEndpoint {
                             }
                         }
                         siteUrl
-                        donationTier
+                        donatorTier
                         createdAt
                     }
                 }
