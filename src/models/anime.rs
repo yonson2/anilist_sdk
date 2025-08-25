@@ -7,39 +7,39 @@ pub struct Anime {
     pub description: Option<String>,
     pub format: Option<MediaFormat>,
     pub status: Option<MediaStatus>,
-    #[serde(rename="startDate")]
+    #[serde(rename = "startDate")]
     pub start_date: Option<FuzzyDate>,
-    #[serde(rename="endDate")]
+    #[serde(rename = "endDate")]
     pub end_date: Option<FuzzyDate>,
     pub season: Option<MediaSeason>,
-    #[serde(rename="seasonYear")]
+    #[serde(rename = "seasonYear")]
     pub season_year: Option<i32>,
     pub episodes: Option<i32>,
     pub duration: Option<i32>,
     pub genres: Option<Vec<String>>,
-    #[serde(rename="averageScore")]
+    #[serde(rename = "averageScore")]
     pub average_score: Option<i32>,
-    #[serde(rename="meanScore")]
+    #[serde(rename = "meanScore")]
     pub mean_score: Option<i32>,
     pub popularity: Option<i32>,
     pub favourites: Option<i32>,
     pub hashtag: Option<String>,
-    #[serde(rename="countryOfOrgin")]
+    #[serde(rename = "countryOfOrgin")]
     pub country_of_origin: Option<String>,
-    #[serde(rename="isAdult")]
+    #[serde(rename = "isAdult")]
     pub is_adult: Option<bool>,
-    #[serde(rename="nextAiringEpisode")]
+    #[serde(rename = "nextAiringEpisode")]
     pub next_airing_episode: Option<AiringSchedule>,
-    #[serde(rename="coverImage")]
+    #[serde(rename = "coverImage")]
     pub cover_image: Option<MediaCoverImage>,
-    #[serde(rename="bannerImage")]
+    #[serde(rename = "bannerImage")]
     pub banner_image: Option<String>,
     pub studios: Option<StudioConnection>,
     pub source: Option<MediaSource>,
     pub trailer: Option<MediaTrailer>,
-    #[serde(rename="updatedAt")]
+    #[serde(rename = "updatedAt")]
     pub updated_at: Option<i32>,
-    #[serde(rename="siteUrl")]
+    #[serde(rename = "siteUrl")]
     pub site_url: Option<String>,
 }
 
@@ -48,7 +48,7 @@ pub struct MediaTitle {
     pub romaji: Option<String>,
     pub english: Option<String>,
     pub native: Option<String>,
-    #[serde(rename="userPreferred")]
+    #[serde(rename = "userPreferred")]
     pub user_preferred: Option<String>,
 }
 
@@ -122,18 +122,18 @@ pub enum MediaSource {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AiringSchedule {
     pub id: i32,
-    #[serde(rename="airingAt")]
+    #[serde(rename = "airingAt")]
     pub airing_at: i32,
-    #[serde(rename="timeUntilAiring")]
+    #[serde(rename = "timeUntilAiring")]
     pub time_until_airing: i32,
     pub episode: i32,
-    #[serde(rename="mediaId")]
+    #[serde(rename = "mediaId")]
     pub media_id: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MediaCoverImage {
-    #[serde(rename="extraLarge")]
+    #[serde(rename = "extraLarge")]
     pub extra_large: Option<String>,
     pub large: Option<String>,
     pub medium: Option<String>,
@@ -156,7 +156,7 @@ pub struct StudioConnection {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StudioEdge {
     pub node: Option<Studio>,
-    #[serde(rename="isMain")]
+    #[serde(rename = "isMain")]
     pub is_main: bool,
 }
 
@@ -164,8 +164,8 @@ pub struct StudioEdge {
 pub struct Studio {
     pub id: i32,
     pub name: String,
-    #[serde(rename="isAnimationStudio")]
+    #[serde(rename = "isAnimationStudio")]
     pub is_animation_studio: bool,
-    #[serde(rename="siteUrl")]
+    #[serde(rename = "siteUrl")]
     pub site_url: Option<String>,
 }

@@ -235,7 +235,12 @@ impl AnimeEndpoint {
     }
 
     /// Search anime by title
-    pub async fn search(&self, search: &str, page: i32, per_page: i32) -> Result<Vec<Anime>, AniListError> {
+    pub async fn search(
+        &self,
+        search: &str,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Anime>, AniListError> {
         let query = r#"
             query ($search: String, $page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -284,7 +289,13 @@ impl AnimeEndpoint {
     }
 
     /// Get anime by season and year
-    pub async fn get_by_season(&self, season: &str, year: i32, page: i32, per_page: i32) -> Result<Vec<Anime>, AniListError> {
+    pub async fn get_by_season(
+        &self,
+        season: &str,
+        year: i32,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Anime>, AniListError> {
         let query = r#"
             query ($season: MediaSeason, $year: Int, $page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -334,7 +345,11 @@ impl AnimeEndpoint {
     }
 
     /// Get top rated anime
-    pub async fn get_top_rated(&self, page: i32, per_page: i32) -> Result<Vec<Anime>, AniListError> {
+    pub async fn get_top_rated(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Anime>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {

@@ -252,7 +252,12 @@ impl UserEndpoint {
     }
 
     /// Search users by name
-    pub async fn search(&self, search: &str, page: i32, per_page: i32) -> Result<Vec<User>, AniListError> {
+    pub async fn search(
+        &self,
+        search: &str,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<User>, AniListError> {
         let query = r#"
             query ($search: String, $page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -300,7 +305,11 @@ impl UserEndpoint {
     }
 
     /// Get users with most anime watched
-    pub async fn get_most_anime_watched(&self, page: i32, per_page: i32) -> Result<Vec<User>, AniListError> {
+    pub async fn get_most_anime_watched(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<User>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -344,7 +353,11 @@ impl UserEndpoint {
     }
 
     /// Get users with most manga read
-    pub async fn get_most_manga_read(&self, page: i32, per_page: i32) -> Result<Vec<User>, AniListError> {
+    pub async fn get_most_manga_read(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<User>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {

@@ -127,7 +127,12 @@ impl StaffEndpoint {
     }
 
     /// Search staff by name
-    pub async fn search(&self, search: &str, page: i32, per_page: i32) -> Result<Vec<Staff>, AniListError> {
+    pub async fn search(
+        &self,
+        search: &str,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Staff>, AniListError> {
         let query = r#"
             query ($search: String, $page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -177,7 +182,11 @@ impl StaffEndpoint {
     }
 
     /// Get staff by birthday (today)
-    pub async fn get_today_birthday(&self, page: i32, per_page: i32) -> Result<Vec<Staff>, AniListError> {
+    pub async fn get_today_birthday(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Staff>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -220,12 +229,16 @@ impl StaffEndpoint {
         let response = self.client.query(query, Some(variables)).await?;
         let data = response["data"]["Page"]["staff"].clone();
         let staff_list: Vec<Staff> = serde_json::from_value(data)?;
-        
+
         Ok(staff_list)
     }
 
     /// Get most favorited staff
-    pub async fn get_most_favorited(&self, page: i32, per_page: i32) -> Result<Vec<Staff>, AniListError> {
+    pub async fn get_most_favorited(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Staff>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {

@@ -189,7 +189,12 @@ impl MangaEndpoint {
     }
 
     /// Search manga by title
-    pub async fn search(&self, search: &str, page: i32, per_page: i32) -> Result<Vec<Manga>, AniListError> {
+    pub async fn search(
+        &self,
+        search: &str,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Manga>, AniListError> {
         let query = r#"
             query ($search: String, $page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -236,7 +241,11 @@ impl MangaEndpoint {
     }
 
     /// Get top rated manga
-    pub async fn get_top_rated(&self, page: i32, per_page: i32) -> Result<Vec<Manga>, AniListError> {
+    pub async fn get_top_rated(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Manga>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -282,7 +291,11 @@ impl MangaEndpoint {
     }
 
     /// Get currently releasing manga
-    pub async fn get_releasing(&self, page: i32, per_page: i32) -> Result<Vec<Manga>, AniListError> {
+    pub async fn get_releasing(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Manga>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -328,7 +341,11 @@ impl MangaEndpoint {
     }
 
     /// Get completed manga
-    pub async fn get_completed(&self, page: i32, per_page: i32) -> Result<Vec<Manga>, AniListError> {
+    pub async fn get_completed(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Manga>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {

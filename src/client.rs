@@ -1,5 +1,7 @@
+use crate::endpoints::{
+    AnimeEndpoint, CharacterEndpoint, MangaEndpoint, StaffEndpoint, UserEndpoint,
+};
 use crate::error::AniListError;
-use crate::endpoints::{AnimeEndpoint, CharacterEndpoint, MangaEndpoint, StaffEndpoint, UserEndpoint};
 use reqwest::Client;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -38,10 +40,14 @@ impl AniListClient {
         UserEndpoint::new(self.clone())
     }
 
-    pub(crate) async fn query(&self, query: &str, variables: Option<HashMap<String, Value>>) -> Result<Value, AniListError> {
+    pub(crate) async fn query(
+        &self,
+        query: &str,
+        variables: Option<HashMap<String, Value>>,
+    ) -> Result<Value, AniListError> {
         let mut body = HashMap::new();
         body.insert("query", Value::String(query.to_string()));
-        
+
         if let Some(vars) = variables {
             body.insert("variables", Value::Object(vars.into_iter().collect()));
         }

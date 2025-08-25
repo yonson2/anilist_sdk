@@ -1,5 +1,5 @@
+use super::{FuzzyDate, MediaCoverImage, MediaFormat, MediaSource, MediaStatus, MediaTitle};
 use serde::{Deserialize, Serialize};
-use super::{MediaTitle, FuzzyDate, MediaFormat, MediaStatus, MediaSource, MediaCoverImage};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Manga {

@@ -14,7 +14,11 @@ impl CharacterEndpoint {
     }
 
     /// Get popular characters
-    pub async fn get_popular(&self, page: i32, per_page: i32) -> Result<Vec<Character>, AniListError> {
+    pub async fn get_popular(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Character>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -111,7 +115,12 @@ impl CharacterEndpoint {
     }
 
     /// Search characters by name
-    pub async fn search(&self, search: &str, page: i32, per_page: i32) -> Result<Vec<Character>, AniListError> {
+    pub async fn search(
+        &self,
+        search: &str,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Character>, AniListError> {
         let query = r#"
             query ($search: String, $page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -160,7 +169,11 @@ impl CharacterEndpoint {
     }
 
     /// Get characters who have birthday today
-    pub async fn get_today_birthday(&self, page: i32, per_page: i32) -> Result<Vec<Character>, AniListError> {
+    pub async fn get_today_birthday(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Character>, AniListError> {
         let query: &'static str = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -202,12 +215,16 @@ impl CharacterEndpoint {
         let response = self.client.query(query, Some(variables)).await?;
         let data = response["data"]["Page"]["characters"].clone();
         let characters: Vec<Character> = serde_json::from_value(data)?;
-        
+
         Ok(characters)
     }
 
     /// Get most favorited characters
-    pub async fn get_most_favorited(&self, page: i32, per_page: i32) -> Result<Vec<Character>, AniListError> {
+    pub async fn get_most_favorited(
+        &self,
+        page: i32,
+        per_page: i32,
+    ) -> Result<Vec<Character>, AniListError> {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {

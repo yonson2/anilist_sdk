@@ -6,14 +6,13 @@ pub mod user;
 
 // Re-export specific types to avoid ambiguity
 pub use anime::{
-    Anime, MediaTitle, FuzzyDate, MediaFormat, MediaStatus, MediaSeason, 
-    MediaSource, AiringSchedule, MediaCoverImage, MediaTrailer, 
-    StudioConnection, StudioEdge, Studio
+    AiringSchedule, Anime, FuzzyDate, MediaCoverImage, MediaFormat, MediaSeason, MediaSource,
+    MediaStatus, MediaTitle, MediaTrailer, Studio, StudioConnection, StudioEdge,
 };
-pub use character::{Character, CharacterName, CharacterImage};
+pub use character::{Character, CharacterImage, CharacterName};
 pub use manga::Manga;
-pub use staff::{Staff, StaffName, StaffImage};
+pub use staff::{Staff, StaffImage, StaffName};
 pub use user::{
-    User, UserAvatar, UserOptions, NotificationOption, MediaListOptions, 
-    MediaListTypeOptions, Favourites, UserStatistics, UserStatisticsType
+    Favourites, MediaListOptions, MediaListTypeOptions, NotificationOption, User, UserAvatar,
+    UserOptions, UserStatistics, UserStatisticsType,
 };
