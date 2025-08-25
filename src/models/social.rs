@@ -25,8 +25,8 @@ pub struct Thread {
     pub reply_user_id: Option<i32>,
     #[serde(rename = "replyCommentId")]
     pub reply_comment_id: Option<i32>,
-    #[serde(rename = "categoryId")]
-    pub category_id: Option<i32>,
+    #[serde(rename = "categories")]
+    pub categories: Option<Vec<ThreadCategory>>,
     #[serde(rename = "mediaCategories")]
     pub media_categories: Option<Vec<ThreadCategory>>,
     #[serde(rename = "isLocked")]

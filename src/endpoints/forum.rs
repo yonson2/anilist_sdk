@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::social::{Thread, ThreadComment};
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -18,14 +19,17 @@ impl ForumEndpoint {
         let query = r#"
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
-                    threads(sort: UPDATED_TIME_DESC) {
+                    threads(sort: UPDATED_AT_DESC) {
                         id
                         title
                         body
                         userId
                         replyUserId
                         replyCommentId
-                        categoryId
+                        categories {
+                            id
+                            name
+                        }
                         isLocked
                         isSticky
                         isSubscribed
@@ -82,7 +86,10 @@ impl ForumEndpoint {
                     userId
                     replyUserId
                     replyCommentId
-                    categoryId
+                    categories {
+                        id
+                        name
+                    }
                     isLocked
                     isSticky
                     isSubscribed
@@ -136,7 +143,10 @@ impl ForumEndpoint {
                         title
                         body
                         userId
-                        categoryId
+                        categories {
+                            id
+                            name
+                        }
                         likeCount
                         replyCount
                         viewCount
@@ -217,7 +227,10 @@ impl ForumEndpoint {
                     title
                     body
                     userId
-                    categoryId
+                    categories {
+                        id
+                        name
+                    }
                     isLocked
                     isSticky
                     likeCount
@@ -253,29 +266,7 @@ impl ForumEndpoint {
 
     /// Post a comment on a thread (requires authentication)
     pub async fn post_comment(&self, thread_id: i32, comment: &str) -> Result<ThreadComment, AniListError> {
-        let query = r#"
-            mutation ($threadId: Int, $comment: String) {
-                SaveThreadComment(threadId: $threadId, comment: $comment) {
-                    id
-                    userId
-                    threadId
-                    comment
-                    likeCount
-                    isLiked
-                    createdAt
-                    updatedAt
-                    siteUrl
-                    user {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::forum::COMMENT_ON_THREAD;
 
         let mut variables = HashMap::new();
         variables.insert("threadId".to_string(), json!(thread_id));
@@ -315,19 +306,7 @@ impl ForumEndpoint {
 
     /// Toggle like on a thread comment (requires authentication)
     pub async fn toggle_comment_like(&self, id: i32) -> Result<ThreadComment, AniListError> {
-        let query = r#"
-            mutation ($id: Int, $type: LikeableType) {
-                ToggleLikeV2(id: $id, type: $type) {
-                    ... on ThreadComment {
-                        id
-                        comment
-                        likeCount
-                        isLiked
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::forum::LIKE_THREAD_COMMENT;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));

@@ -19,6 +19,7 @@ async fn test_get_recent_threads() {
 async fn test_search_threads() {
     let client = AniListClient::new();
     let result = client.forum().search_threads("anime", 1, 5).await;
+    println!("Search result: {:?}", result);
     
     assert!(result.is_ok());
     let threads = result.unwrap();

@@ -1,4 +1,10 @@
 use anilist_moe::client::AniListClient;
+use tokio::time::{sleep, Duration};
+
+/// Helper function to add rate limiting between test requests
+async fn rate_limit() {
+    sleep(Duration::from_secs(1)).await;
+}
 
 #[tokio::test]
 async fn test_comprehensive_integration() {
@@ -14,6 +20,7 @@ async fn test_comprehensive_integration() {
         .expect("Failed to get popular anime");
     assert!(!popular_anime.is_empty());
     println!("✓ Popular anime: Found {} entries", popular_anime.len());
+    rate_limit().await;
 
     let trending_anime = client
         .anime()
@@ -22,6 +29,7 @@ async fn test_comprehensive_integration() {
         .expect("Failed to get trending anime");
     assert!(!trending_anime.is_empty());
     println!("✓ Trending anime: Found {} entries", trending_anime.len());
+    rate_limit().await;
 
     // Get a specific anime by ID
     if let Some(first_anime) = popular_anime.first() {

@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::social::{Activity, TextActivity, ActivityReply};
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -411,27 +412,7 @@ impl ActivityEndpoint {
 
     /// Post a reply to an activity (requires authentication)
     pub async fn post_activity_reply(&self, activity_id: i32, text: &str) -> Result<ActivityReply, AniListError> {
-        let query = r#"
-            mutation ($activityId: Int, $text: String) {
-                SaveActivityReply(activityId: $activityId, text: $text) {
-                    id
-                    userId
-                    activityId
-                    text
-                    likeCount
-                    isLiked
-                    createdAt
-                    user {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::REPLY_TO_ACTIVITY;
 
         let mut variables = HashMap::new();
         variables.insert("activityId".to_string(), json!(activity_id));
@@ -445,30 +426,7 @@ impl ActivityEndpoint {
 
     /// Toggle like on an activity (requires authentication)
     pub async fn toggle_activity_like(&self, id: i32) -> Result<Activity, AniListError> {
-        let query = r#"
-            mutation ($id: Int, $type: LikeableType) {
-                ToggleLikeV2(id: $id, type: $type) {
-                    ... on TextActivity {
-                        id
-                        likeCount
-                        isLiked
-                        siteUrl
-                    }
-                    ... on ListActivity {
-                        id
-                        likeCount
-                        isLiked
-                        siteUrl
-                    }
-                    ... on MessageActivity {
-                        id
-                        likeCount
-                        isLiked
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::TOGGLE_LIKE;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));

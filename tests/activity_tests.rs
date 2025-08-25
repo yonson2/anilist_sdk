@@ -1,4 +1,10 @@
 use anilist_moe::client::AniListClient;
+use tokio::time::{sleep, Duration};
+
+/// Helper function to add rate limiting between test requests
+async fn rate_limit() {
+    sleep(Duration::from_secs(1)).await;
+}
 
 #[tokio::test]
 async fn test_get_recent_activities() {
@@ -12,10 +18,14 @@ async fn test_get_recent_activities() {
     for activity in &activities {
         assert!(activity.id > 0);
     }
+    
+    rate_limit().await;
 }
 
 #[tokio::test]
 async fn test_get_text_activities() {
+    rate_limit().await;
+    
     let client = AniListClient::new();
     let result = client.activity().get_text_activities(1, 5).await;
     
@@ -26,6 +36,8 @@ async fn test_get_text_activities() {
     for activity in &activities {
         assert!(activity.id > 0);
     }
+    
+    rate_limit().await;
 }
 
 #[tokio::test]

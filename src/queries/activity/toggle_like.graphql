@@ -1,0 +1,31 @@
+mutation ($activityId: Int) {
+    ToggleLikeV2(id: $activityId, type: ACTIVITY) {
+        ... on ListActivity {
+            id
+            isLiked
+            likeCount
+            user {
+                id
+                name
+            }
+        }
+        ... on TextActivity {
+            id
+            isLiked
+            likeCount
+            user {
+                id
+                name
+            }
+        }
+        ... on MessageActivity {
+            id
+            isLiked
+            likeCount
+            messenger {
+                id
+                name
+            }
+        }
+    }
+}

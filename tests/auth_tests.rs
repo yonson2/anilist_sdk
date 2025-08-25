@@ -1,6 +1,12 @@
 use anilist_moe::client::AniListClient;
 use dotenv::dotenv;
 use std::env;
+use tokio::time::{sleep, Duration};
+
+/// Helper function to add rate limiting between test requests
+async fn rate_limit() {
+    sleep(Duration::from_secs(1)).await;
+}
 
 #[tokio::test]
 async fn test_authenticated_client_creation() {
@@ -12,16 +18,24 @@ async fn test_authenticated_client_creation() {
     // We can't test actual authenticated calls without a real token,
     // but we can verify the client is created correctly
     assert!(true, "Authenticated client created successfully");
+    
+    rate_limit().await;
 }
 
 #[tokio::test]
 async fn test_unauthenticated_vs_authenticated_client() {
+    dotenv().ok();
+    rate_limit().await;
+    
     // Test that both client types work for public endpoints
     let unauth_client = AniListClient::new();
-    let auth_client = AniListClient::with_token("fake_token".to_string());
+    let token = env::var("ANILIST_TOKEN").unwrap_or_else(|_| "fake_token".to_string());
+    let auth_client = AniListClient::with_token(token.to_string());
     
     // Both should be able to access public endpoints
     let unauth_result = unauth_client.anime().get_popular(1, 1).await;
+    rate_limit().await;
+    
     let auth_result = auth_client.anime().get_popular(1, 1).await;
     
     // Both should succeed (or both should fail with the same type of error)
@@ -39,10 +53,14 @@ async fn test_unauthenticated_vs_authenticated_client() {
             panic!("Authenticated and unauthenticated clients behaved differently for public endpoint");
         }
     }
+    
+    rate_limit().await;
 }
 
 #[tokio::test]
 async fn test_current_user_without_token() {
+    rate_limit().await;
+    
     // Test that current user endpoint fails without authentication
     let client = AniListClient::new();
     let result = client.user().get_current_user().await;

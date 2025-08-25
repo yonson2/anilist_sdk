@@ -620,6 +620,120 @@ impl AniListClient {
         NotificationEndpoint::new(self.clone())
     }
 
+    /// Sets or updates the authentication token for this client.
+    /// 
+    /// This method allows you to add authentication to an existing client instance
+    /// or update the token if it has changed (e.g., after token refresh).
+    /// 
+    /// # Parameters
+    /// 
+    /// * `token` - The new AniList access token to use for authenticated requests
+    /// 
+    /// # Examples
+    /// 
+    /// ```rust
+    /// use anilist_moe::AniListClient;
+    /// 
+    /// // Start with unauthenticated client
+    /// let mut client = AniListClient::new();
+    /// 
+    /// // Later, add authentication
+    /// client.set_token("your_access_token".to_string());
+    /// 
+    /// // Now can access authenticated endpoints
+    /// let user = client.user().get_current_user().await?;
+    /// 
+    /// // Can also update token if it changes
+    /// client.set_token("new_token".to_string());
+    /// ```
+    /// 
+    /// # Use Cases
+    /// 
+    /// - **Dynamic Authentication**: Add authentication after client creation
+    /// - **Token Refresh**: Update expired tokens during application lifetime
+    /// - **User Switching**: Change tokens when switching between user accounts
+    /// - **Conditional Authentication**: Enable authentication based on runtime conditions
+    /// 
+    /// # Note
+    /// 
+    /// This method updates the token for the current client instance. If you need
+    /// to preserve both authenticated and unauthenticated clients, create separate
+    /// client instances instead.
+    pub fn set_token(&mut self, token: String) {
+        self.token = Some(token);
+    }
+
+    /// Removes authentication from this client.
+    /// 
+    /// After calling this method, the client will no longer include authentication
+    /// headers in requests and will only be able to access public endpoints.
+    /// 
+    /// # Examples
+    /// 
+    /// ```rust
+    /// use anilist_moe::AniListClient;
+    /// 
+    /// let mut client = AniListClient::with_token("token".to_string());
+    /// 
+    /// // Can access authenticated endpoints
+    /// let user = client.user().get_current_user().await?;
+    /// 
+    /// // Remove authentication
+    /// client.clear_token();
+    /// 
+    /// // Now only public endpoints work
+    /// let anime = client.anime().get_popular(1, 10).await?; // This works
+    /// // client.user().get_current_user().await?; // This would fail
+    /// ```
+    /// 
+    /// # Use Cases
+    /// 
+    /// - **Logout Functionality**: Remove authentication when user logs out
+    /// - **Token Expiry**: Clear invalid tokens to prevent failed requests
+    /// - **Privacy Mode**: Temporarily disable authentication for privacy
+    /// - **Error Recovery**: Clear potentially corrupted tokens
+    pub fn clear_token(&mut self) {
+        self.token = None;
+    }
+
+    /// Checks if the client currently has an authentication token.
+    /// 
+    /// This method returns `true` if a token is set, but does not validate
+    /// whether the token is still valid or has the necessary permissions.
+    /// 
+    /// # Returns
+    /// 
+    /// Returns `true` if an authentication token is set, `false` otherwise.
+    /// 
+    /// # Examples
+    /// 
+    /// ```rust
+    /// use anilist_moe::AniListClient;
+    /// 
+    /// let client = AniListClient::new();
+    /// assert!(!client.has_token()); // No token set
+    /// 
+    /// let auth_client = AniListClient::with_token("token".to_string());
+    /// assert!(auth_client.has_token()); // Token is set
+    /// 
+    /// let mut mutable_client = AniListClient::new();
+    /// mutable_client.set_token("token".to_string());
+    /// assert!(mutable_client.has_token()); // Token was added
+    /// 
+    /// mutable_client.clear_token();
+    /// assert!(!mutable_client.has_token()); // Token was removed
+    /// ```
+    /// 
+    /// # Use Cases
+    /// 
+    /// - **Conditional Logic**: Check authentication before calling protected endpoints
+    /// - **UI Updates**: Show/hide authentication-dependent features
+    /// - **Error Prevention**: Avoid calls that will fail due to missing authentication
+    /// - **State Management**: Track authentication state in applications
+    pub fn has_token(&self) -> bool {
+        self.token.is_some()
+    }
+
     /// Executes a GraphQL query against the AniList API.
     /// 
     /// This is the low-level method used internally by all endpoint methods to
@@ -643,8 +757,8 @@ impl AniListClient {
     /// - [`AniListError::AuthenticationRequired`] for 401 responses
     /// - [`AniListError::AccessDenied`] for 403 responses
     /// - [`AniListError::NotFound`] for 404 responses
-    /// - [`AniListError::GraphQLError`] for API-level GraphQL errors
-    /// - [`AniListError::NetworkError`] for network-related issues
+    /// - [`AniListError::GraphQL`] for API-level GraphQL errors
+    /// - [`AniListError::Network`] for network-related issues
     /// 
     /// # Rate Limiting
     /// 

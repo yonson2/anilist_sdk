@@ -7,6 +7,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::Anime;
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -102,76 +103,7 @@ impl AnimeEndpoint {
     /// The popularity ranking is updated regularly by AniList and may change over time.
     /// Results are consistent within short time periods but may vary across longer periods.
     pub async fn get_popular(&self, page: i32, per_page: i32) -> Result<Vec<Anime>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    media(type: ANIME, sort: POPULARITY_DESC) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        description
-                        format
-                        status
-                        startDate {
-                            year
-                            month
-                            day
-                        }
-                        endDate {
-                            year
-                            month
-                            day
-                        }
-                        season
-                        seasonYear
-                        episodes
-                        duration
-                        genres
-                        averageScore
-                        meanScore
-                        popularity
-                        favourites
-                        hashtag
-                        countryOfOrigin
-                        isAdult
-                        nextAiringEpisode {
-                            id
-                            airingAt
-                            timeUntilAiring
-                            episode
-                            mediaId
-                        }
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                        source
-                        trailer {
-                            id
-                            site
-                            thumbnail
-                        }
-                        updatedAt
-                        siteUrl
-                        studios {
-                            nodes {
-                                id
-                                name
-                                isAnimationStudio
-                                siteUrl
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::anime::GET_POPULAR;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));

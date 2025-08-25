@@ -1,0 +1,9 @@
+mutation ($userId: Int) {
+    ToggleFollow(userId: $userId) {
+        id
+        name
+        isFollowing
+        isFollower
+        isBlocked
+    }
+}
