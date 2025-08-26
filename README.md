@@ -40,7 +40,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-anilist-moe = "0.1.0"
+anilist_moe = "0.1.1"
 tokio = { version = "1.0", features = ["full"] }
 ```
 
