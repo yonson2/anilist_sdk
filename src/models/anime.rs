@@ -70,82 +70,53 @@ use serde::{Deserialize, Serialize};
 /// completeness of data for the specific anime. Always check for `None`
 /// values before using field data.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Anime {
     /// Unique identifier for this anime on AniList
     pub id: i32,
-
     /// Multi-language title information including romaji, english, and native titles
     pub title: Option<MediaTitle>,
-
     /// Synopsis or description of the anime (may contain HTML formatting)
     pub description: Option<String>,
-
     /// Format/type of the anime (TV series, movie, OVA, etc.)
     pub format: Option<MediaFormat>,
-
     /// Current airing/publication status
     pub status: Option<MediaStatus>,
-
     /// Date when the anime started airing
-    #[serde(rename = "startDate")]
     pub start_date: Option<FuzzyDate>,
-
     /// Date when the anime finished airing (null for ongoing series)
-    #[serde(rename = "endDate")]
     pub end_date: Option<FuzzyDate>,
-
     /// Season when the anime aired (Winter, Spring, Summer, Fall)
     pub season: Option<MediaSeason>,
-
     /// Year of the airing season
-    #[serde(rename = "seasonYear")]
     pub season_year: Option<i32>,
-
     /// Total number of episodes (null for ongoing series)
     pub episodes: Option<i32>,
-
     /// Average episode duration in minutes
     pub duration: Option<i32>,
-
     /// List of genre tags associated with this anime
     pub genres: Option<Vec<String>>,
-
     /// Average user rating on a scale of 0-100
-    #[serde(rename = "averageScore")]
     pub average_score: Option<i32>,
-
     /// Mean user rating on a scale of 0-100
-    #[serde(rename = "meanScore")]
     pub mean_score: Option<i32>,
-
     /// Number of users who have this anime in their lists
     pub popularity: Option<i32>,
-
     /// Number of users who have favorited this anime
     pub favourites: Option<i32>,
-
     /// Official hashtag for social media
     pub hashtag: Option<String>,
-
     /// Country where the anime was produced
-    #[serde(rename = "countryOfOrgin")]
     pub country_of_origin: Option<String>,
-
     /// Whether the anime is marked as adult/mature content
-    #[serde(rename = "isAdult")]
     pub is_adult: Option<bool>,
-    #[serde(rename = "nextAiringEpisode")]
     pub next_airing_episode: Option<AiringSchedule>,
-    #[serde(rename = "coverImage")]
     pub cover_image: Option<MediaCoverImage>,
-    #[serde(rename = "bannerImage")]
     pub banner_image: Option<String>,
     pub studios: Option<StudioConnection>,
     pub source: Option<MediaSource>,
     pub trailer: Option<MediaTrailer>,
-    #[serde(rename = "updatedAt")]
     pub updated_at: Option<i32>,
-    #[serde(rename = "siteUrl")]
     pub site_url: Option<String>,
 }
 
@@ -166,74 +137,66 @@ pub struct FuzzyDate {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaFormat {
-    TV,
-    #[serde(rename = "TV_SHORT")]
-    TVSHORT,
-    MOVIE,
-    SPECIAL,
-    OVA,
-    ONA,
-    MUSIC,
-    MANGA,
-    NOVEL,
-    #[serde(rename = "ONE_SHOT")]
-    ONESHOT,
+    Tv,
+    TvShort,
+    Movie,
+    Special,
+    Ova,
+    Ona,
+    Music,
+    Manga,
+    Novel,
+    OneShot,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaStatus {
-    FINISHED,
-    RELEASING,
-    #[serde(rename = "NOT_YET_RELEASED")]
-    NOTYETRELEASED,
-    CANCELLED,
-    HIATUS,
+    Finished,
+    Releasing,
+    NotYetReleased,
+    Cancelled,
+    Hiatus,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaSeason {
-    WINTER,
-    SPRING,
-    SUMMER,
-    FALL,
+    Winter,
+    Spring,
+    Summer,
+    Fall,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaSource {
-    ORIGINAL,
-    MANGA,
-    #[serde(rename = "LIGHT_NOVEL")]
-    LIGHTNOVEL,
-    #[serde(rename = "VISUAL_NOVEL")]
-    VISUALNOVEL,
-    #[serde(rename = "VIDEO_GAME")]
-    VIDEOGAME,
-    OTHER,
-    NOVEL,
-    DOUJINSHI,
-    ANIME,
-    #[serde(rename = "WEB_NOVEL")]
-    WEBNOVEL,
-    #[serde(rename = "LIVE_ACTION")]
-    LIVEACTION,
-    GAME,
-    COMIC,
-    #[serde(rename = "MULTIMEDIA_PROJECT")]
-    MULTIMEDIAPROJECT,
-    #[serde(rename = "PICTURE_BOOK")]
-    PICTUREBOOK,
+    Original,
+    Manga,
+    LightNovel,
+    VisualNovel,
+    VideoGame,
+    Other,
+    Novel,
+    Doujinshi,
+    Anime,
+    WebNovel,
+    Liveaction,
+    Game,
+    Comic,
+    MultimediaProject,
+    PictureBook,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AiringSchedule {
     pub id: i32,
-    #[serde(rename = "airingAt")]
     pub airing_at: i32,
-    #[serde(rename = "timeUntilAiring")]
     pub time_until_airing: i32,
     pub episode: i32,
-    #[serde(rename = "mediaId")]
     pub media_id: i32,
 }
 
@@ -267,11 +230,10 @@ pub struct StudioEdge {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Studio {
     pub id: i32,
     pub name: String,
-    #[serde(rename = "isAnimationStudio")]
     pub is_animation_studio: bool,
-    #[serde(rename = "siteUrl")]
     pub site_url: Option<String>,
 }

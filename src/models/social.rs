@@ -132,18 +132,17 @@ pub struct Review {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaType {
-    ANIME,
-    MANGA,
+    Anime,
+    Manga,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ReviewRating {
-    #[serde(rename = "NO_VOTE")]
     NoVote,
-    #[serde(rename = "UP_VOTE")]
     UpVote,
-    #[serde(rename = "DOWN_VOTE")]
     DownVote,
 }
 
@@ -186,12 +185,10 @@ pub struct Recommendation {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum RecommendationRating {
-    #[serde(rename = "NO_RATING")]
     NoRating,
-    #[serde(rename = "RATE_UP")]
     RateUp,
-    #[serde(rename = "RATE_DOWN")]
     RateDown,
 }
 
@@ -207,18 +204,17 @@ pub struct RecommendationMedia {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaFormat {
-    TV,
-    #[serde(rename = "TV_SHORT")]
+    Tv,
     TvShort,
-    MOVIE,
-    SPECIAL,
-    OVA,
-    ONA,
-    MUSIC,
-    MANGA,
-    NOVEL,
-    #[serde(rename = "ONE_SHOT")]
+    Movie,
+    Special,
+    Ova,
+    Ona,
+    Music,
+    Manga,
+    Novel,
     OneShot,
 }
 

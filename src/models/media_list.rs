@@ -1,3 +1,5 @@
+use crate::models::{AiringSchedule, anime::MediaStatus};
+
 use super::{FuzzyDate, MediaCoverImage, MediaTitle};
 use serde::{Deserialize, Serialize};
 
@@ -26,13 +28,14 @@ pub struct MediaList {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaListStatus {
-    CURRENT,
-    PLANNING,
-    COMPLETED,
-    DROPPED,
-    PAUSED,
-    REPEATING,
+    Current,
+    Planning,
+    Completed,
+    Dropped,
+    Paused,
+    Repeating,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -41,7 +44,7 @@ pub struct MediaListMedia {
     pub id: i32,
     pub id_mal: Option<i32>,
     pub title: Option<MediaTitle>,
-    pub next_airing_episode: Option<MediaNextAiringEpisode>,
+    pub next_airing_episode: Option<AiringSchedule>,
     pub cover_image: Option<MediaCoverImage>,
     pub format: Option<String>,
     pub status: Option<MediaStatus>,
@@ -58,15 +61,4 @@ pub struct MediaListMedia {
 #[serde(rename_all = "camelCase")]
 pub struct MediaNextAiringEpisode {
     pub episode: Option<i32>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "UPPERCASE")]
-pub enum MediaStatus {
-    Finished,
-    Releasing,
-    #[serde(rename = "NOT_YET_RELEASED")]
-    NotYetReleased,
-    Cancelled,
-    Hiatus,
 }
