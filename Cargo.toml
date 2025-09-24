@@ -1,19 +1,22 @@
 [package]
 name = "anilist_moe"
-version = "0.1.1"
+version = "0.1.2"
 description = "Anilist_Moe is a Rust Wrapper for the Anilist API. This library allows you to seamlessly interact with Anilist's Public API with and without authentication. This currently supports Anime, Manga, Users, Staff, Forum, Threads, Recommendations, Reviews and User Activities"
 edition = "2024"
 license = "MIT"
-repository = "https://github.com/Thunder-Blaze/anilist_moe/"
+repository = "https://github.com/yonson2/anilist_sdk/"
 keywords = ["wrapper", "api", "anilist"]
 readme = "README.md"
 
 [dependencies]
-reqwest = { version = "0.12.12", default-features = false, features = ["json", "rustls-tls"] }
+reqwest = { version = "0.12.12", default-features = false, features = [
+  "json",
+  "rustls-tls",
+] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio = { version = "1.0", features = ["full"] }
-thiserror = "1.0"
+thiserror = "2.0"
 chrono = "0.4.41"
 dotenv = "0.15.0"
 
