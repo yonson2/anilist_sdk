@@ -1,7 +1,8 @@
+use super::{FuzzyDate, MediaCoverImage, MediaTitle};
 use serde::{Deserialize, Serialize};
-use super::{FuzzyDate, MediaTitle, MediaCoverImage};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MediaList {
     pub id: i32,
     pub user_id: i32,
@@ -35,6 +36,7 @@ pub enum MediaListStatus {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MediaListMedia {
     pub id: i32,
     pub title: Option<MediaTitle>,
