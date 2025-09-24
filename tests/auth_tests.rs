@@ -9,6 +9,7 @@ async fn rate_limit() {
 }
 
 #[tokio::test]
+#[cfg_attr(feature = "ci", ignore)]
 async fn test_authenticated_client_creation() {
     dotenv().ok();
     // Test that we can create authenticated clients
@@ -22,6 +23,7 @@ async fn test_authenticated_client_creation() {
 }
 
 #[tokio::test]
+#[cfg_attr(feature = "ci", ignore)]
 async fn test_unauthenticated_vs_authenticated_client() {
     dotenv().ok();
     rate_limit().await;
@@ -57,6 +59,7 @@ async fn test_unauthenticated_vs_authenticated_client() {
 }
 
 #[tokio::test]
+#[cfg_attr(feature = "ci", ignore)]
 async fn test_current_user_without_token() {
     rate_limit().await;
 
@@ -72,6 +75,7 @@ async fn test_current_user_without_token() {
 }
 
 #[tokio::test]
+#[cfg_attr(feature = "ci", ignore)]
 async fn test_authenticated_current_user() {
     dotenv().ok();
 
@@ -100,6 +104,7 @@ async fn test_authenticated_current_user() {
 }
 
 #[tokio::test]
+#[cfg_attr(feature = "ci", ignore)]
 async fn test_authenticated_user_anime_list() {
     dotenv().ok();
 
@@ -145,6 +150,7 @@ async fn test_authenticated_user_anime_list() {
 }
 
 #[tokio::test]
+#[cfg_attr(feature = "ci", ignore)]
 async fn test_token_validation() {
     dotenv().ok();
 
@@ -194,6 +200,7 @@ async fn test_token_validation() {
 // 3. Mock the API responses for testing
 
 #[tokio::test]
+#[cfg_attr(feature = "ci", ignore)]
 async fn test_token_in_headers() {
     // This is more of a unit test to ensure our client structure is correct
     let _client_with_token = AniListClient::with_token("test_token".to_string());

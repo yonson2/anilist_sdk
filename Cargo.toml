@@ -1,12 +1,15 @@
 [package]
 name = "anilist_sdk"
-version = "0.1.9"
+version = "0.1.10"
 description = "Anilist SDK is a Rust Wrapper for the Anilist API. This library allows you to seamlessly interact with Anilist's Public API with and without authentication. This currently supports Anime, Manga, Users, Staff, Forum, Threads, Recommendations, Reviews and User Activities"
 edition = "2024"
 license = "MIT"
 repository = "https://github.com/yonson2/anilist_sdk/"
 keywords = ["wrapper", "api", "anilist"]
 readme = "README.md"
+
+[features]
+ci = []
 
 [dependencies]
 reqwest = { version = "0.12.12", default-features = false, features = [
