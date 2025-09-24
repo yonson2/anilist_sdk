@@ -1,4 +1,4 @@
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 use dotenv::dotenv;
 use std::env;
 use tokio::time::{Duration, sleep};

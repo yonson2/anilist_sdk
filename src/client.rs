@@ -39,7 +39,7 @@ const ANILIST_API_URL: &str = "https://graphql.anilist.co";
 /// ## Unauthenticated Usage
 ///
 /// ```rust
-/// use anilist_moe::AniListClient;
+/// use anilist_sdk::AniListClient;
 ///
 /// let client = AniListClient::new();
 /// // Access public endpoints
@@ -49,7 +49,7 @@ const ANILIST_API_URL: &str = "https://graphql.anilist.co";
 /// ## Authenticated Usage
 ///
 /// ```rust
-/// use anilist_moe::AniListClient;
+/// use anilist_sdk::AniListClient;
 ///
 /// let client = AniListClient::with_token("your_token".to_string());
 /// // Access both public and private endpoints
@@ -73,7 +73,7 @@ impl AniListClient {
     /// # Examples
     ///
     /// ```rust
-    /// use anilist_moe::AniListClient;
+    /// use anilist_sdk::AniListClient;
     ///
     /// let client = AniListClient::new();
     ///
@@ -106,7 +106,7 @@ impl AniListClient {
     /// # Examples
     ///
     /// ```rust
-    /// use anilist_moe::AniListClient;
+    /// use anilist_sdk::AniListClient;
     /// use std::env;
     ///
     /// let token = env::var("ANILIST_TOKEN").expect("ANILIST_TOKEN not set");
@@ -632,7 +632,7 @@ impl AniListClient {
     /// # Examples
     ///
     /// ```rust
-    /// use anilist_moe::AniListClient;
+    /// use anilist_sdk::AniListClient;
     ///
     /// // Start with unauthenticated client
     /// let mut client = AniListClient::new();
@@ -671,7 +671,7 @@ impl AniListClient {
     /// # Examples
     ///
     /// ```rust
-    /// use anilist_moe::AniListClient;
+    /// use anilist_sdk::AniListClient;
     ///
     /// let mut client = AniListClient::with_token("token".to_string());
     ///
@@ -708,7 +708,7 @@ impl AniListClient {
     /// # Examples
     ///
     /// ```rust
-    /// use anilist_moe::AniListClient;
+    /// use anilist_sdk::AniListClient;
     ///
     /// let client = AniListClient::new();
     /// assert!(!client.has_token()); // No token set

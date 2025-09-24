@@ -50,7 +50,7 @@ use serde::{Deserialize, Serialize};
 /// # Examples
 ///
 /// ```rust
-/// use anilist_moe::AniListClient;
+/// use anilist_sdk::AniListClient;
 ///
 /// let client = AniListClient::new();
 /// let anime = client.anime().get_by_id(16498).await?;

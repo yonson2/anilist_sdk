@@ -1,7 +1,7 @@
 [package]
-name = "anilist_moe"
-version = "0.1.2"
-description = "Anilist_Moe is a Rust Wrapper for the Anilist API. This library allows you to seamlessly interact with Anilist's Public API with and without authentication. This currently supports Anime, Manga, Users, Staff, Forum, Threads, Recommendations, Reviews and User Activities"
+name = "anilist_sdk"
+version = "0.1.4"
+description = "Anilist SDK is a Rust Wrapper for the Anilist API. This library allows you to seamlessly interact with Anilist's Public API with and without authentication. This currently supports Anime, Manga, Users, Staff, Forum, Threads, Recommendations, Reviews and User Activities"
 edition = "2024"
 license = "MIT"
 repository = "https://github.com/yonson2/anilist_sdk/"

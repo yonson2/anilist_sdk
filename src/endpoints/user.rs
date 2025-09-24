@@ -193,7 +193,6 @@ impl UserEndpoint {
 
         let mut variables = HashMap::new();
         variables.insert("type".to_string(), json!("ANIME"));
-        variables.insert("type".to_string(), json!("ANIME"));
         variables.insert(
             "userId".to_string(),
             json!(self.client.user().get_current_user().await?.id),

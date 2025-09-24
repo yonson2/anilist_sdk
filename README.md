@@ -40,7 +40,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-anilist_moe = "0.1.1"
+anilist_sdk = "0.1.1"
 tokio = { version = "1.0", features = ["full"] }
 ```
 
@@ -113,7 +113,7 @@ These endpoints require an authenticated client created with `AniListClient::wit
 ### Basic Usage
 
 ```rust
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -133,7 +133,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 For accessing user-specific data, you'll need an authenticated client:
 
 ```rust
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -165,7 +165,7 @@ To get an access token for authentication:
 ### Anime Operations
 
 ```rust
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -199,7 +199,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ### Manga Operations
 
 ```rust
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -233,7 +233,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ### Character Operations
 
 ```rust
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -261,7 +261,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ### Staff Operations
 
 ```rust
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -289,7 +289,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ### User Operations
 
 ```rust
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -319,7 +319,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 The library provides comprehensive error handling:
 
 ```rust
-use anilist_moe::{client::AniListClient, error::AniListError};
+use anilist_sdk::{client::AniListClient, error::AniListError};
 
 #[tokio::main]
 async fn main() {

@@ -1,6 +1,6 @@
-use anilist_moe::client::AniListClient;
-use anilist_moe::error::AniListError;
-use anilist_moe::utils::{RetryConfig, rate_limit_delay, retry_with_backoff};
+use anilist_sdk::client::AniListClient;
+use anilist_sdk::error::AniListError;
+use anilist_sdk::utils::{RetryConfig, rate_limit_delay, retry_with_backoff};
 use dotenv::dotenv;
 
 #[tokio::main]

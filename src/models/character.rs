@@ -40,7 +40,7 @@ use serde::{Deserialize, Serialize};
 /// # Examples
 ///
 /// ```rust
-/// use anilist_moe::AniListClient;
+/// use anilist_sdk::AniListClient;
 ///
 /// let client = AniListClient::new();
 /// let character = client.character().get_by_id(40882).await?;

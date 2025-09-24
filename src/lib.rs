@@ -65,7 +65,7 @@
 //! ### Basic Usage (No Authentication)
 //!
 //! ```rust
-//! use anilist_moe::AniListClient;
+//! use anilist_sdk::AniListClient;
 //!
 //! #[tokio::main]
 //! async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -88,7 +88,7 @@
 //! ### Authenticated Usage
 //!
 //! ```rust
-//! use anilist_moe::AniListClient;
+//! use anilist_sdk::AniListClient;
 //! use std::env;
 //!
 //! #[tokio::main]
@@ -115,7 +115,7 @@
 //! ### Error Handling
 //!
 //! ```rust
-//! use anilist_moe::{AniListClient, AniListError};
+//! use anilist_sdk::{AniListClient, AniListError};
 //!
 //! #[tokio::main]
 //! async fn main() {

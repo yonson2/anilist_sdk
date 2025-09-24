@@ -39,7 +39,7 @@ use thiserror::Error;
 /// # Examples
 ///
 /// ```rust
-/// use anilist_moe::{AniListClient, AniListError};
+/// use anilist_sdk::{AniListClient, AniListError};
 ///
 /// match client.anime().get_by_id(999999).await {
 ///     Ok(anime) => println!("Found: {}", anime.title.romaji),

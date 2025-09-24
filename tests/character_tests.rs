@@ -1,4 +1,4 @@
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 use chrono::prelude::*;
 use tokio::time::{Duration, sleep};
 

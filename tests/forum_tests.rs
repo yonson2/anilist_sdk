@@ -1,4 +1,4 @@
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 
 #[tokio::test]
 async fn test_get_recent_threads() {

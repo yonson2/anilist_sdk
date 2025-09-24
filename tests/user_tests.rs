@@ -1,4 +1,4 @@
-use anilist_moe::client::AniListClient;
+use anilist_sdk::client::AniListClient;
 use tokio::time::{Duration, sleep};
 
 /// Helper function to add rate limiting between test requests

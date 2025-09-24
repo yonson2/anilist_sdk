@@ -22,7 +22,7 @@ use std::collections::HashMap;
 /// # Examples
 ///
 /// ```rust
-/// use anilist_moe::AniListClient;
+/// use anilist_sdk::AniListClient;
 ///
 /// let client = AniListClient::new();
 /// let anime_endpoint = client.anime();
@@ -80,7 +80,7 @@ impl AnimeEndpoint {
     /// # Examples
     ///
     /// ```rust
-    /// use anilist_moe::AniListClient;
+    /// use anilist_sdk::AniListClient;
     ///
     /// let client = AniListClient::new();
     ///
@@ -142,7 +142,7 @@ impl AnimeEndpoint {
     /// # Examples
     ///
     /// ```rust
-    /// use anilist_moe::AniListClient;
+    /// use anilist_sdk::AniListClient;
     ///
     /// let client = AniListClient::new();
     ///
@@ -326,7 +326,7 @@ impl AnimeEndpoint {
     /// # Examples
     ///
     /// ```rust
-    /// use anilist_moe::AniListClient;
+    /// use anilist_sdk::AniListClient;
     ///
     /// let client = AniListClient::new();
     ///

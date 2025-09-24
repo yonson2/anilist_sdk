@@ -16,7 +16,7 @@ use tokio::time::sleep;
 /// # Examples
 ///
 /// ```rust
-/// use anilist_moe::utils::RetryConfig;
+/// use anilist_sdk::utils::RetryConfig;
 ///
 /// // Default configuration (3 retries, exponential backoff)
 /// let config = RetryConfig::default();
@@ -142,7 +142,7 @@ impl Default for RetryConfig {
 /// # Examples
 ///
 /// ```rust
-/// use anilist_moe::{AniListClient, utils::{retry_with_backoff, RetryConfig}};
+/// use anilist_sdk::{AniListClient, utils::{retry_with_backoff, RetryConfig}};
 ///
 /// let client = AniListClient::new();
 /// let config = RetryConfig::default();
