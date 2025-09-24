@@ -44,7 +44,7 @@ pub struct MediaListMedia {
     pub next_airing_episode: Option<MediaNextAiringEpisode>,
     pub cover_image: Option<MediaCoverImage>,
     pub format: Option<String>,
-    pub status: Option<String>,
+    pub status: Option<MediaStatus>,
     pub episodes: Option<i32>,
     pub chapters: Option<i32>,
     pub volumes: Option<i32>,
@@ -58,4 +58,15 @@ pub struct MediaListMedia {
 #[serde(rename_all = "camelCase")]
 pub struct MediaNextAiringEpisode {
     pub episode: Option<i32>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum MediaStatus {
+    Finished,
+    Releasing,
+    #[serde(rename = "NOT_YET_RELEASED")]
+    NotYetReleased,
+    Cancelled,
+    Hiatus,
 }
