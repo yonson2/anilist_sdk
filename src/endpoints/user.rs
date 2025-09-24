@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
-use crate::models::media_list::MediaList;
+use crate::models::FuzzyDate;
+use crate::models::media_list::{MediaList, MediaListStatus};
 use crate::models::user::User;
 use crate::queries;
 use serde_json::json;
@@ -689,5 +690,96 @@ impl UserEndpoint {
         let response = self.client.query(query, Some(variables)).await?;
         // The mutation returns the updated favourites object, but we'll just return success
         Ok(response["data"]["ToggleFavourite"].is_object())
+    }
+
+    /// Update the progress of a media list entry (requires authentication)
+    ///
+    /// # Arguments
+    /// * `media_list_entry_id` - The ID of the media list entry to update
+    /// * `progress` - The new progress value (episodes watched)
+    ///
+    /// # Returns
+    /// Returns `()` on successful update
+    ///
+    /// # Errors
+    /// * `AniListError::AuthenticationRequired` - If no authentication token is provided
+    /// * `AniListError::Network` - If there's a network connectivity issue
+    /// * `AniListError::GraphQL` - If the AniList API returns an error
+    ///
+    /// # Example
+    /// ```rust
+    /// client.user().update_media_list_progress(123456, 12).await?;
+    /// println!("Progress updated successfully!");
+    /// ```
+    pub async fn update_media_list_progress(
+        &self,
+        media_list_entry_id: i32,
+        progress: i32,
+    ) -> Result<(), AniListError> {
+        let query = queries::user::UPDATE_MEDIA_LIST_PROGRESS;
+
+        let mut variables = HashMap::new();
+        variables.insert(
+            "saveMediaListEntryId".to_string(),
+            json!(media_list_entry_id),
+        );
+        variables.insert("progress".to_string(), json!(progress));
+
+        self.client.query(query, Some(variables)).await?;
+        Ok(())
+    }
+
+    /// Update the status of a media list entry (requires authentication)
+    ///
+    /// # Arguments
+    /// * `media_list_entry_id` - The ID of the media list entry to update
+    /// * `status` - The new status (Current, Completed, Dropped, etc.)
+    /// * `completed_at` - Optional completion date (when status is set to Completed)
+    ///
+    /// # Returns
+    /// Returns `()` on successful update
+    ///
+    /// # Errors
+    /// * `AniListError::AuthenticationRequired` - If no authentication token is provided
+    /// * `AniListError::Network` - If there's a network connectivity issue
+    /// * `AniListError::GraphQL` - If the AniList API returns an error
+    ///
+    /// # Example
+    /// ```rust
+    /// use crate::models::media_list::MediaListStatus;
+    /// use crate::models::FuzzyDate;
+    ///
+    /// // Mark as completed with completion date
+    /// let completion_date = FuzzyDate {
+    ///     year: Some(2024),
+    ///     month: Some(3),
+    ///     day: Some(15),
+    /// };
+    /// client.user().update_media_list_status(123456, MediaListStatus::Completed, Some(completion_date)).await?;
+    ///
+    /// // Just change status without completion date
+    /// client.user().update_media_list_status(123456, MediaListStatus::Dropped, None).await?;
+    /// ```
+    pub async fn update_media_list_status(
+        &self,
+        media_list_entry_id: i32,
+        status: MediaListStatus,
+        completed_at: Option<FuzzyDate>,
+    ) -> Result<(), AniListError> {
+        let query = queries::user::UPDATE_MEDIA_LIST_STATUS;
+
+        let mut variables = HashMap::new();
+        variables.insert(
+            "saveMediaListEntryId".to_string(),
+            json!(media_list_entry_id),
+        );
+        variables.insert("status".to_string(), json!(status));
+
+        if let Some(completed_at) = completed_at {
+            variables.insert("completedAt".to_string(), json!(completed_at));
+        }
+
+        self.client.query(query, Some(variables)).await?;
+        Ok(())
     }
 }

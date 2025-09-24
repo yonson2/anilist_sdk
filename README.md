@@ -1,5 +1,41 @@
 # AniList API Wrapper
 
+<!--toc:start-->
+- [AniList API Wrapper](#anilist-api-wrapper)
+  - [Features](#features)
+  - [Supported Endpoints](#supported-endpoints)
+    - [Core Content](#core-content)
+    - [Social & Community](#social-community)
+    - [Scheduling & Discovery](#scheduling-discovery)
+  - [Quick Start](#quick-start)
+  - [Authentication](#authentication)
+  - [API Endpoints](#api-endpoints)
+    - [Public Endpoints (No Authentication Required)](#public-endpoints-no-authentication-required)
+      - [Anime](#anime)
+      - [Manga](#manga)
+      - [Characters](#characters)
+      - [Staff](#staff)
+      - [Users (Public Data)](#users-public-data)
+    - [Authenticated Endpoints (Requires Access Token)](#authenticated-endpoints-requires-access-token)
+      - [User (Private Data)](#user-private-data)
+  - [Usage Examples](#usage-examples)
+    - [Basic Usage](#basic-usage)
+    - [Authenticated Client](#authenticated-client)
+    - [Media List Management](#media-list-management)
+      - [Getting an Access Token](#getting-an-access-token)
+    - [Anime Operations](#anime-operations)
+    - [Manga Operations](#manga-operations)
+    - [Character Operations](#character-operations)
+    - [Staff Operations](#staff-operations)
+    - [User Operations](#user-operations)
+  - [Error Handling](#error-handling)
+  - [Data Models](#data-models)
+  - [Testing](#testing)
+  - [Rate Limiting](#rate-limiting)
+  - [Contributing](#contributing)
+  - [License](#license)
+<!--toc:end-->
+
 A comprehensive, modular Rust wrapper for the AniList GraphQL API.
 
 ## Features
@@ -16,6 +52,7 @@ A comprehensive, modular Rust wrapper for the AniList GraphQL API.
 ## Supported Endpoints
 
 ### Core Content
+
 - **Anime**: Popular, trending, search, seasonal, top-rated, airing
 - **Manga**: Popular, trending, search, top-rated, releasing, completed
 - **Characters**: Popular, search, by ID, with media roles
@@ -23,6 +60,7 @@ A comprehensive, modular Rust wrapper for the AniList GraphQL API.
 - **Studios**: Search, by ID, with media productions
 
 ### Social & Community
+
 - **Users**: Profiles, statistics, favorites, lists, followers
 - **Forums**: Threads, comments, categories, search
 - **Activities**: Text activities, list updates, replies, likes
@@ -31,6 +69,7 @@ A comprehensive, modular Rust wrapper for the AniList GraphQL API.
 - **Notifications**: Read, manage, and mark as read
 
 ### Scheduling & Discovery
+
 - **Airing Schedules**: Upcoming episodes, recently aired, date ranges
 - **Trending & Popular**: Real-time trending content across all types
 
@@ -40,7 +79,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-anilist_sdk = "0.1.1"
+anilist_sdk = "0.1.9"
 tokio = { version = "1.0", features = ["full"] }
 ```
 
@@ -60,6 +99,7 @@ export ANILIST_TOKEN="your_access_token_here"
 All clients (authenticated and unauthenticated) can access these endpoints:
 
 #### Anime
+
 - `get_popular(page, per_page)` - Get popular anime
 - `get_trending(page, per_page)` - Get trending anime
 - `get_by_id(id)` - Get anime by ID
@@ -69,6 +109,7 @@ All clients (authenticated and unauthenticated) can access these endpoints:
 - `get_airing(page, per_page)` - Get currently airing anime
 
 #### Manga
+
 - `get_popular(page, per_page)` - Get popular manga
 - `get_trending(page, per_page)` - Get trending manga
 - `get_by_id(id)` - Get manga by ID
@@ -78,6 +119,7 @@ All clients (authenticated and unauthenticated) can access these endpoints:
 - `get_completed(page, per_page)` - Get completed manga
 
 #### Characters
+
 - `get_popular(page, per_page)` - Get popular characters
 - `get_by_id(id)` - Get character by ID
 - `search(query, page, per_page)` - Search characters by name
@@ -85,6 +127,7 @@ All clients (authenticated and unauthenticated) can access these endpoints:
 - `get_most_favorited(page, per_page)` - Get most favorited characters
 
 #### Staff
+
 - `get_popular(page, per_page)` - Get popular staff
 - `get_by_id(id)` - Get staff by ID
 - `search(query, page, per_page)` - Search staff by name
@@ -92,6 +135,7 @@ All clients (authenticated and unauthenticated) can access these endpoints:
 - `get_most_favorited(page, per_page)` - Get most favorited staff
 
 #### Users (Public Data)
+
 - `get_by_id(id)` - Get user by ID
 - `get_by_name(name)` - Get user by username
 - `search(query, page, per_page)` - Search users
@@ -103,10 +147,15 @@ All clients (authenticated and unauthenticated) can access these endpoints:
 These endpoints require an authenticated client created with `AniListClient::with_token()`:
 
 #### User (Private Data)
+
 - `get_current_user()` - Get current authenticated user's profile
 - `get_current_user_anime_list(status)` - Get current user's anime list
+- `update_media_list_progress(media_list_entry_id, progress)` - Update progress of a media list entry
+- `update_media_list_status(media_list_entry_id, status, completed_at)` - Update status of a media list entry
+- `toggle_follow(user_id)` - Follow/unfollow a user
+- `toggle_favorite(anime_id, manga_id)` - Add/remove anime or manga from favorites
 
-*Note: More authenticated endpoints will be added in future versions for list management, favorites, etc.*
+*Note: More authenticated endpoints will be added in future versions.*
 
 ## Usage Examples
 
@@ -148,7 +197,58 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Get current user's anime list
     let anime_list = client.user().get_current_user_anime_list(Some("CURRENT")).await?;
     println!("Currently watching {} anime", anime_list.len());
-    
+
+    Ok(())
+}
+```
+
+### Media List Management
+
+For managing your anime/manga lists (requires authentication):
+
+```rust
+use anilist_sdk::client::AniListClient;
+use anilist_sdk::models::media_list::MediaListStatus;
+use anilist_sdk::models::FuzzyDate;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let token = "your_access_token_here".to_string();
+    let client = AniListClient::with_token(token);
+
+    // Update progress (e.g., watched 5 episodes)
+    client.user().update_media_list_progress(123456, 5).await?;
+    println!("Updated progress to 5 episodes");
+
+    // Mark anime as completed with completion date
+    let completion_date = FuzzyDate {
+        year: Some(2024),
+        month: Some(3),
+        day: Some(15),
+    };
+    client.user().update_media_list_status(
+        123456,
+        MediaListStatus::Completed,
+        Some(completion_date)
+    ).await?;
+    println!("Marked as completed");
+
+    // Change status without completion date (e.g., drop an anime)
+    client.user().update_media_list_status(
+        123456,
+        MediaListStatus::Dropped,
+        None
+    ).await?;
+    println!("Status updated to dropped");
+
+    // Follow a user
+    let user = client.user().toggle_follow(987654).await?;
+    println!("Follow status updated");
+
+    // Add anime to favorites
+    client.user().toggle_favorite(Some(21), None).await?;
+    println!("Anime added to/removed from favorites");
+
     Ok(())
 }
 ```

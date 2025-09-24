@@ -22,6 +22,14 @@ pub mod user {
 
     /// Toggle favorite anime/manga mutation
     pub const TOGGLE_FAVORITE: &str = include_str!("user/toggle_favorite.graphql");
+
+    /// Update media list progress mutation
+    pub const UPDATE_MEDIA_LIST_PROGRESS: &str =
+        include_str!("user/update_media_list_progress.graphql");
+
+    /// Update media list status mutation
+    pub const UPDATE_MEDIA_LIST_STATUS: &str =
+        include_str!("user/update_media_list_status.graphql");
 }
 
 /// Activity-related GraphQL queries

@@ -1,0 +1,5 @@
+mutation ($saveMediaListEntryId: Int, $status: MediaListStatus, $completedAt: FuzzyDateInput) {
+    SaveMediaListEntry(id: $saveMediaListEntryId, status: $status, completedAt: $completedAt) {
+        id
+    }
+}
