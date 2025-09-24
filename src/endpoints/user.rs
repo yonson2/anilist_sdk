@@ -165,6 +165,10 @@ impl UserEndpoint {
                             createdAt
                             media {
                                 id
+                                idMal
+                                nextAiringEpisode {
+                                    episode
+                                }
                                 title {
                                     romaji
                                     english

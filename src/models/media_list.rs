@@ -39,7 +39,9 @@ pub enum MediaListStatus {
 #[serde(rename_all = "camelCase")]
 pub struct MediaListMedia {
     pub id: i32,
+    pub id_mal: Option<i32>,
     pub title: Option<MediaTitle>,
+    pub next_airing_episode: Option<MediaNextAiringEpisode>,
     pub cover_image: Option<MediaCoverImage>,
     pub format: Option<String>,
     pub status: Option<String>,
@@ -50,4 +52,10 @@ pub struct MediaListMedia {
     pub season_year: Option<i32>,
     pub average_score: Option<i32>,
     pub genres: Option<Vec<String>>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MediaNextAiringEpisode {
+    pub episode: Option<i32>,
 }
