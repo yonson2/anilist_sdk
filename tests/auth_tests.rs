@@ -17,7 +17,6 @@ async fn test_authenticated_client_creation() {
 
     // We can't test actual authenticated calls without a real token,
     // but we can verify the client is created correctly
-    assert!(true, "Authenticated client created successfully");
 
     rate_limit().await;
 }
@@ -42,11 +41,9 @@ async fn test_unauthenticated_vs_authenticated_client() {
     match (unauth_result, auth_result) {
         (Ok(_), Ok(_)) => {
             // Both succeeded
-            assert!(true);
         }
         (Err(_), Err(_)) => {
             // Both failed (probably network issues)
-            assert!(true);
         }
         _ => {
             // One succeeded and one failed - this shouldn't happen for public endpoints
@@ -204,7 +201,6 @@ async fn test_token_in_headers() {
 
     // We can't directly test the headers without exposing internal structure,
     // but we can ensure both clients can be created and used
-    assert!(true, "Both client types created successfully");
 
     // In a real test, you might want to use a mock HTTP client to verify
     // that the Authorization header is being sent correctly

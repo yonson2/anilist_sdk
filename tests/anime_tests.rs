@@ -73,11 +73,11 @@ async fn test_search_anime() {
             title
                 .romaji
                 .as_ref()
-                .map_or(false, |t| t.to_lowercase().contains("naruto"))
+                .is_some_and(|t| t.to_lowercase().contains("naruto"))
                 || title
                     .english
                     .as_ref()
-                    .map_or(false, |t| t.to_lowercase().contains("naruto"))
+                    .is_some_and(|t| t.to_lowercase().contains("naruto"))
         } else {
             false
         }

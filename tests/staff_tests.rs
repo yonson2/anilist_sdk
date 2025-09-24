@@ -58,11 +58,11 @@ async fn test_search_staff() {
         if let Some(name) = &staff.name {
             name.full
                 .as_ref()
-                .map_or(false, |n| n.to_lowercase().contains("miyazaki"))
+                .is_some_and(|n| n.to_lowercase().contains("miyazaki"))
                 || name
                     .last
                     .as_ref()
-                    .map_or(false, |n| n.to_lowercase().contains("miyazaki"))
+                    .is_some_and(|n| n.to_lowercase().contains("miyazaki"))
         } else {
             false
         }

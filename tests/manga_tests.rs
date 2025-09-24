@@ -73,11 +73,11 @@ async fn test_search_manga() {
             title
                 .romaji
                 .as_ref()
-                .map_or(false, |t| t.to_lowercase().contains("one piece"))
+                .is_some_and(|t| t.to_lowercase().contains("one piece"))
                 || title
                     .english
                     .as_ref()
-                    .map_or(false, |t| t.to_lowercase().contains("one piece"))
+                    .is_some_and(|t| t.to_lowercase().contains("one piece"))
         } else {
             false
         }

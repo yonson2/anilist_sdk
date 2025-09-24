@@ -85,10 +85,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if let Some(favourites) = staff.favourites {
                 println!("   Favourites: {}", favourites);
             }
-            if let Some(occupations) = &staff.primary_occupations {
-                if !occupations.is_empty() {
-                    println!("   Primary Occupation: {}", occupations[0]);
-                }
+            if let Some(occupations) = &staff.primary_occupations
+                && !occupations.is_empty()
+            {
+                println!("   Primary Occupation: {}", occupations[0]);
             }
         }
     }
@@ -126,10 +126,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .or(title.romaji.as_ref())
                 .unwrap_or(&unknown_title);
             println!("{}. {} (ID: {})", i + 1, display_title, anime.id);
-            if let Some(season_year) = anime.season_year {
-                if let Some(season) = &anime.season {
-                    println!("   Season: {:?} {}", season, season_year);
-                }
+            if let Some(season_year) = anime.season_year
+                && let Some(season) = &anime.season
+            {
+                println!("   Season: {:?} {}", season, season_year);
             }
         }
     }

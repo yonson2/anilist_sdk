@@ -370,11 +370,11 @@ impl AiringEndpoint {
         let response = self.client.query(query, Some(variables)).await?;
         let schedules_array = response["data"]["Page"]["airingSchedules"].as_array();
 
-        if let Some(schedules) = schedules_array {
-            if !schedules.is_empty() {
-                let schedule: AiringSchedule = serde_json::from_value(schedules[0].clone())?;
-                return Ok(Some(schedule));
-            }
+        if let Some(schedules) = schedules_array
+            && !schedules.is_empty()
+        {
+            let schedule: AiringSchedule = serde_json::from_value(schedules[0].clone())?;
+            return Ok(Some(schedule));
         }
 
         Ok(None)

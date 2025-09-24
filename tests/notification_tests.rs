@@ -62,18 +62,18 @@ async fn test_mark_notifications_as_read() {
 
     // First try to get some notifications to mark as read
     let notifications_result = client.notification().get_notifications(1, 1).await;
-    if let Ok(notifications) = notifications_result {
-        if let Some(notification) = notifications.first() {
-            let result = client
-                .notification()
-                .mark_notifications_as_read(vec![notification.id])
-                .await;
-            // This might fail if the notification is already read or doesn't belong to user
-            match result {
-                Ok(success) => assert!(success),
-                Err(_) => {
-                    // Acceptable if notification doesn't exist or is already read
-                }
+    if let Ok(notifications) = notifications_result
+        && let Some(notification) = notifications.first()
+    {
+        let result = client
+            .notification()
+            .mark_notifications_as_read(vec![notification.id])
+            .await;
+        // This might fail if the notification is already read or doesn't belong to user
+        match result {
+            Ok(success) => assert!(success),
+            Err(_) => {
+                // Acceptable if notification doesn't exist or is already read
             }
         }
     }
