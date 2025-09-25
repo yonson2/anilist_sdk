@@ -134,7 +134,6 @@ impl UserEndpoint {
         &self,
         status: Option<&str>,
     ) -> Result<Vec<MediaList>, AniListError> {
-        // For now, we'll use a simpler approach
         let query = r#"
             query ($userId: Int, $type: MediaType, $status: MediaListStatus) {
                 MediaListCollection(userId: $userId, type: $type, status: $status) {
@@ -168,7 +167,11 @@ impl UserEndpoint {
                                 id
                                 idMal
                                 nextAiringEpisode {
+                                    id
+                                    airingAt
+                                    timeUntilAiring
                                     episode
+                                    mediaId
                                 }
                                 title {
                                     romaji
