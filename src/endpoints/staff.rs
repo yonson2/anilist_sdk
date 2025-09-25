@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::staff::Staff;
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -15,51 +16,7 @@ impl StaffEndpoint {
 
     /// Get popular staff
     pub async fn get_popular(&self, page: i32, per_page: i32) -> Result<Vec<Staff>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    staff(sort: FAVOURITES_DESC) {
-                        id
-                        name {
-                            first
-                            middle
-                            last
-                            full
-                            native
-                            alternative
-                            userPreferred
-                        }
-                        languageV2
-                        image {
-                            large
-                            medium
-                        }
-                        description
-                        primaryOccupations
-                        gender
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        dateOfDeath {
-                            year
-                            month
-                            day
-                        }
-                        age
-                        yearsActive
-                        homeTown
-                        bloodType
-                        isFavourite
-                        isFavouriteBlocked
-                        siteUrl
-                        favourites
-                        modNotes
-                    }
-                }
-            }
-        "#;
+        let query = queries::staff::GET_POPULAR;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -73,49 +30,7 @@ impl StaffEndpoint {
 
     /// Get staff by ID
     pub async fn get_by_id(&self, id: i32) -> Result<Staff, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                Staff(id: $id) {
-                    id
-                    name {
-                        first
-                        middle
-                        last
-                        full
-                        native
-                        alternative
-                        userPreferred
-                    }
-                    languageV2
-                    image {
-                        large
-                        medium
-                    }
-                    description
-                    primaryOccupations
-                    gender
-                    dateOfBirth {
-                        year
-                        month
-                        day
-                    }
-                    dateOfDeath {
-                        year
-                        month
-                        day
-                    }
-                    age
-                    yearsActive
-                    homeTown
-                    bloodType
-                    isFavourite
-                    isFavouriteBlocked
-                    siteUrl
-                    favourites
-                    modNotes
-                }
-            }
-        "#;
+        let query = queries::staff::GET_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -133,42 +48,7 @@ impl StaffEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Staff>, AniListError> {
-        let query = r#"
-            query ($search: String, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    staff(search: $search) {
-                        id
-                        name {
-                            first
-                            middle
-                            last
-                            full
-                            native
-                            alternative
-                            userPreferred
-                        }
-                        languageV2
-                        image {
-                            large
-                            medium
-                        }
-                        description
-                        primaryOccupations
-                        gender
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        age
-                        yearsActive
-                        homeTown
-                        siteUrl
-                        favourites
-                    }
-                }
-            }
-        "#;
+        let query = queries::staff::SEARCH;
 
         let mut variables = HashMap::new();
         variables.insert("search".to_string(), json!(search));
@@ -187,40 +67,7 @@ impl StaffEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Staff>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    staff(sort: FAVOURITES_DESC, isBirthday: true) {
-                        id
-                        name {
-                            first
-                            middle
-                            last
-                            full
-                            native
-                            alternative
-                            userPreferred
-                        }
-                        image {
-                            large
-                            medium
-                        }
-                        description
-                        primaryOccupations
-                        gender
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        age
-                        yearsActive
-                        siteUrl
-                        favourites
-                    }
-                }
-            }
-        "#;
+        let query = queries::staff::GET_TODAY_BIRTHDAY;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -239,40 +86,7 @@ impl StaffEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Staff>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    staff(sort: FAVOURITES_DESC) {
-                        id
-                        name {
-                            first
-                            middle
-                            last
-                            full
-                            native
-                            alternative
-                            userPreferred
-                        }
-                        image {
-                            large
-                            medium
-                        }
-                        description
-                        primaryOccupations
-                        gender
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        age
-                        yearsActive
-                        siteUrl
-                        favourites
-                    }
-                }
-            }
-        "#;
+        let query = queries::staff::GET_MOST_FAVORITED;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));

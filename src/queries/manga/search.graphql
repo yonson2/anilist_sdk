@@ -1,0 +1,31 @@
+query ($search: String, $page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        media(type: MANGA, search: $search) {
+            id
+            title {
+                romaji
+                english
+                native
+                userPreferred
+            }
+            description
+            format
+            status
+            chapters
+            volumes
+            genres
+            averageScore
+            meanScore
+            popularity
+            favourites
+            coverImage {
+                extraLarge
+                large
+                medium
+                color
+            }
+            bannerImage
+            siteUrl
+        }
+    }
+}

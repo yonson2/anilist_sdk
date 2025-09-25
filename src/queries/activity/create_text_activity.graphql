@@ -1,0 +1,21 @@
+mutation ($text: String) {
+    SaveTextActivity(text: $text) {
+        id
+        userId
+        text
+        replyCount
+        likeCount
+        isLiked
+        isPinned
+        siteUrl
+        createdAt
+        user {
+            id
+            name
+            avatar {
+                large
+                medium
+            }
+        }
+    }
+}

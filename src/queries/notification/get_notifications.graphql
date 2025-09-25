@@ -1,0 +1,258 @@
+query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        notifications(sort: ID_DESC) {
+            ... on AiringNotification {
+                id
+                userId
+                type
+                animeId
+                episode
+                contexts
+                createdAt
+                media {
+                    id
+                    type
+                    title {
+                        romaji
+                        english
+                        native
+                        userPreferred
+                    }
+                    coverImage {
+                        large
+                        medium
+                        color
+                    }
+                }
+            }
+            ... on FollowingNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ActivityMessageNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ActivityMentionNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ActivityReplyNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ThreadCommentMentionNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ThreadCommentReplyNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ThreadCommentSubscribedNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ActivityLikeNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ActivityReplyLikeNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ThreadLikeNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ThreadCommentLikeNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on ActivityReplySubscribedNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+            ... on RelatedMediaAdditionNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                media {
+                    id
+                    type
+                    title {
+                        userPreferred
+                    }
+                    coverImage {
+                        large
+                    }
+                }
+            }
+            ... on MediaDataChangeNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                media {
+                    id
+                    type
+                    title {
+                        userPreferred
+                    }
+                    coverImage {
+                        large
+                    }
+                }
+            }
+            ... on MediaMergeNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+            }
+            ... on MediaDeletionNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+            }
+        }
+    }
+}

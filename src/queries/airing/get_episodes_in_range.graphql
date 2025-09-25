@@ -1,0 +1,30 @@
+query ($page: Int, $perPage: Int, $airingAtGreater: Int, $airingAtLesser: Int, $sort: [AiringSort]) {
+    Page(page: $page, perPage: $perPage) {
+        airingSchedules(airingAt_greater: $airingAtGreater, airingAt_lesser: $airingAtLesser, sort: $sort) {
+            id
+            airingAt
+            timeUntilAiring
+            episode
+            mediaId
+            media {
+                id
+                title {
+                    romaji
+                    english
+                    native
+                    userPreferred
+                }
+                coverImage {
+                    extraLarge
+                    large
+                    medium
+                    color
+                }
+                bannerImage
+                episodes
+                format
+                siteUrl
+            }
+        }
+    }
+}

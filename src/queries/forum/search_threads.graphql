@@ -1,0 +1,28 @@
+query ($search: String, $page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        threads(search: $search, sort: SEARCH_MATCH) {
+            id
+            title
+            body
+            userId
+            categories {
+                id
+                name
+            }
+            likeCount
+            replyCount
+            viewCount
+            createdAt
+            updatedAt
+            siteUrl
+            user {
+                id
+                name
+                avatar {
+                    large
+                    medium
+                }
+            }
+        }
+    }
+}

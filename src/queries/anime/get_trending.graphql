@@ -30,9 +30,6 @@ query ($page: Int, $perPage: Int) {
             meanScore
             popularity
             favourites
-            hashtag
-            countryOfOrigin
-            isAdult
             coverImage {
                 extraLarge
                 large

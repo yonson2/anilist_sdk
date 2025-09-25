@@ -1,0 +1,42 @@
+mutation ($mediaId: Int, $body: String, $summary: String, $score: Int, $private: Boolean) {
+    SaveReview(mediaId: $mediaId, body: $body, summary: $summary, score: $score, private: $private) {
+        id
+        userId
+        mediaId
+        mediaType
+        summary
+        body
+        rating
+        ratingAmount
+        userRating
+        score
+        private
+        siteUrl
+        createdAt
+        updatedAt
+        user {
+            id
+            name
+            avatar {
+                large
+                medium
+            }
+        }
+        media {
+            id
+            title {
+                romaji
+                english
+                native
+                userPreferred
+            }
+            coverImage {
+                extraLarge
+                large
+                medium
+                color
+            }
+            bannerImage
+        }
+    }
+}

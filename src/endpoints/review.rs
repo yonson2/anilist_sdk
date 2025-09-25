@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::social::Review;
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -19,52 +20,7 @@ impl ReviewEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Review>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    reviews(sort: CREATED_AT_DESC) {
-                        id
-                        userId
-                        mediaId
-                        mediaType
-                        summary
-                        body
-                        rating
-                        ratingAmount
-                        userRating
-                        score
-                        private
-                        siteUrl
-                        createdAt
-                        updatedAt
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            bannerImage
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::review::GET_RECENT_REVIEWS;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -83,52 +39,7 @@ impl ReviewEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Review>, AniListError> {
-        let query = r#"
-            query ($mediaId: Int, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    reviews(mediaId: $mediaId, sort: RATING_DESC) {
-                        id
-                        userId
-                        mediaId
-                        mediaType
-                        summary
-                        body
-                        rating
-                        ratingAmount
-                        userRating
-                        score
-                        private
-                        siteUrl
-                        createdAt
-                        updatedAt
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            bannerImage
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::review::GET_REVIEWS_FOR_MEDIA;
 
         let mut variables = HashMap::new();
         variables.insert("mediaId".to_string(), json!(media_id));
@@ -148,52 +59,7 @@ impl ReviewEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Review>, AniListError> {
-        let query = r#"
-            query ($userId: Int, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    reviews(userId: $userId, sort: CREATED_AT_DESC) {
-                        id
-                        userId
-                        mediaId
-                        mediaType
-                        summary
-                        body
-                        rating
-                        ratingAmount
-                        userRating
-                        score
-                        private
-                        siteUrl
-                        createdAt
-                        updatedAt
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            bannerImage
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::review::GET_REVIEWS_BY_USER;
 
         let mut variables = HashMap::new();
         variables.insert("userId".to_string(), json!(user_id));
@@ -208,50 +74,7 @@ impl ReviewEndpoint {
 
     /// Get review by ID
     pub async fn get_review_by_id(&self, id: i32) -> Result<Review, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                Review(id: $id) {
-                    id
-                    userId
-                    mediaId
-                    mediaType
-                    summary
-                    body
-                    rating
-                    ratingAmount
-                    userRating
-                    score
-                    private
-                    siteUrl
-                    createdAt
-                    updatedAt
-                    user {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                    }
-                    media {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                    }
-                }
-            }
-        "#;
+        let query = queries::review::GET_REVIEW_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -271,50 +94,7 @@ impl ReviewEndpoint {
         score: Option<i32>,
         private: Option<bool>,
     ) -> Result<Review, AniListError> {
-        let query = r#"
-            mutation ($mediaId: Int, $body: String, $summary: String, $score: Int, $private: Boolean) {
-                SaveReview(mediaId: $mediaId, body: $body, summary: $summary, score: $score, private: $private) {
-                    id
-                    userId
-                    mediaId
-                    mediaType
-                    summary
-                    body
-                    rating
-                    ratingAmount
-                    userRating
-                    score
-                    private
-                    siteUrl
-                    createdAt
-                    updatedAt
-                    user {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                    }
-                    media {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                    }
-                }
-            }
-        "#;
+        let query = queries::review::SAVE_REVIEW;
 
         let mut variables = HashMap::new();
         variables.insert("mediaId".to_string(), json!(media_id));
@@ -337,17 +117,7 @@ impl ReviewEndpoint {
 
     /// Rate a review (requires authentication)
     pub async fn rate_review(&self, review_id: i32, rating: &str) -> Result<Review, AniListError> {
-        let query = r#"
-            mutation ($reviewId: Int, $rating: ReviewRating) {
-                RateReview(reviewId: $reviewId, rating: $rating) {
-                    id
-                    rating
-                    ratingAmount
-                    userRating
-                    siteUrl
-                }
-            }
-        "#;
+        let query = queries::review::RATE_REVIEW;
 
         let mut variables = HashMap::new();
         variables.insert("reviewId".to_string(), json!(review_id));
@@ -361,13 +131,7 @@ impl ReviewEndpoint {
 
     /// Delete a review (requires authentication and ownership)
     pub async fn delete_review(&self, id: i32) -> Result<bool, AniListError> {
-        let query = r#"
-            mutation ($id: Int) {
-                DeleteReview(id: $id) {
-                    deleted
-                }
-            }
-        "#;
+        let query = queries::review::DELETE_REVIEW;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -385,52 +149,7 @@ impl ReviewEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Review>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    reviews(sort: RATING_DESC) {
-                        id
-                        userId
-                        mediaId
-                        mediaType
-                        summary
-                        body
-                        rating
-                        ratingAmount
-                        userRating
-                        score
-                        private
-                        siteUrl
-                        createdAt
-                        updatedAt
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            bannerImage
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::review::GET_TOP_RATED_REVIEWS;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));

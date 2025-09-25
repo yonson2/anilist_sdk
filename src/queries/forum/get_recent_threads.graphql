@@ -1,0 +1,46 @@
+query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        threads(sort: UPDATED_AT_DESC) {
+            id
+            title
+            body
+            userId
+            replyUserId
+            replyCommentId
+            categories {
+                id
+                name
+            }
+            isLocked
+            isSticky
+            isSubscribed
+            likeCount
+            isLiked
+            repliedAt
+            createdAt
+            updatedAt
+            replyCount
+            viewCount
+            siteUrl
+            user {
+                id
+                name
+                avatar {
+                    large
+                    medium
+                }
+                donatorTier
+                donatorBadge
+                moderatorRoles
+            }
+            replyUser {
+                id
+                name
+                avatar {
+                    large
+                    medium
+                }
+            }
+        }
+    }
+}

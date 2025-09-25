@@ -1,0 +1,25 @@
+query ($threadId: Int, $page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        threadComments(threadId: $threadId) {
+            id
+            userId
+            threadId
+            comment
+            likeCount
+            isLiked
+            createdAt
+            updatedAt
+            siteUrl
+            user {
+                id
+                name
+                avatar {
+                    large
+                    medium
+                }
+                donatorTier
+                moderatorRoles
+            }
+        }
+    }
+}

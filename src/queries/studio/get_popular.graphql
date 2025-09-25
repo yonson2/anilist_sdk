@@ -1,0 +1,12 @@
+query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        studios(sort: FAVOURITES_DESC) {
+            id
+            name
+            isAnimationStudio
+            siteUrl
+            favourites
+            isFavourite
+        }
+    }
+}

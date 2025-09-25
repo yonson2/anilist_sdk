@@ -1,0 +1,53 @@
+query ($type: [NotificationType], $page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        notifications(type_in: $type, sort: ID_DESC) {
+            ... on AiringNotification {
+                id
+                userId
+                type
+                animeId
+                episode
+                contexts
+                createdAt
+                media {
+                    id
+                    type
+                    title {
+                        userPreferred
+                    }
+                    coverImage {
+                        large
+                    }
+                }
+            }
+            ... on FollowingNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                    }
+                }
+            }
+            ... on ActivityMessageNotification {
+                id
+                userId
+                type
+                contexts
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                    }
+                }
+            }
+        }
+    }
+}

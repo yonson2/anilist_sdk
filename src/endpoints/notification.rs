@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::social::Notification;
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -19,266 +20,7 @@ impl NotificationEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Notification>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    notifications(sort: ID_DESC) {
-                        ... on AiringNotification {
-                            id
-                            userId
-                            type
-                            animeId
-                            episode
-                            contexts
-                            createdAt
-                            media {
-                                id
-                                type
-                                title {
-                                    romaji
-                                    english
-                                    native
-                                    userPreferred
-                                }
-                                coverImage {
-                                    large
-                                    medium
-                                    color
-                                }
-                            }
-                        }
-                        ... on FollowingNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ActivityMessageNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ActivityMentionNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ActivityReplyNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ThreadCommentMentionNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ThreadCommentReplyNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ThreadCommentSubscribedNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ActivityLikeNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ActivityReplyLikeNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ThreadLikeNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ThreadCommentLikeNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ActivityReplySubscribedNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on RelatedMediaAdditionNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            media {
-                                id
-                                type
-                                title {
-                                    userPreferred
-                                }
-                                coverImage {
-                                    large
-                                }
-                            }
-                        }
-                        ... on MediaDataChangeNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            media {
-                                id
-                                type
-                                title {
-                                    userPreferred
-                                }
-                                coverImage {
-                                    large
-                                }
-                            }
-                        }
-                        ... on MediaMergeNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                        }
-                        ... on MediaDeletionNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::notification::GET_NOTIFICATIONS;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -292,13 +34,7 @@ impl NotificationEndpoint {
 
     /// Get unread notification count (requires authentication)
     pub async fn get_unread_count(&self) -> Result<i32, AniListError> {
-        let query = r#"
-            query {
-                Viewer {
-                    unreadNotificationCount
-                }
-            }
-        "#;
+        let query = queries::notification::GET_UNREAD_COUNT;
 
         let response = self.client.query(query, None).await?;
         let count = response["data"]["Viewer"]["unreadNotificationCount"]
@@ -314,61 +50,7 @@ impl NotificationEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Notification>, AniListError> {
-        let query = r#"
-            query ($type: [NotificationType], $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    notifications(type_in: $type, sort: ID_DESC) {
-                        ... on AiringNotification {
-                            id
-                            userId
-                            type
-                            animeId
-                            episode
-                            contexts
-                            createdAt
-                            media {
-                                id
-                                type
-                                title {
-                                    userPreferred
-                                }
-                                coverImage {
-                                    large
-                                }
-                            }
-                        }
-                        ... on FollowingNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                }
-                            }
-                        }
-                        ... on ActivityMessageNotification {
-                            id
-                            userId
-                            type
-                            contexts
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::notification::GET_NOTIFICATIONS_BY_TYPE;
 
         let mut variables = HashMap::new();
         variables.insert("type".to_string(), json!([notification_type]));
@@ -386,13 +68,7 @@ impl NotificationEndpoint {
         &self,
         notification_ids: Vec<i32>,
     ) -> Result<bool, AniListError> {
-        let query = r#"
-            mutation ($notificationIds: [Int]) {
-                SaveNotificationSettings(notificationIds: $notificationIds) {
-                    id
-                }
-            }
-        "#;
+        let query = queries::notification::MARK_NOTIFICATIONS_AS_READ;
 
         let mut variables = HashMap::new();
         variables.insert("notificationIds".to_string(), json!(notification_ids));

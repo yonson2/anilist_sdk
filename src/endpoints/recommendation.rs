@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::social::Recommendation;
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -19,59 +20,7 @@ impl RecommendationEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Recommendation>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    recommendations(sort: ID_DESC) {
-                        id
-                        rating
-                        userRating
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            format
-                            averageScore
-                        }
-                        mediaRecommendation {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            format
-                            averageScore
-                        }
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::recommendation::GET_RECENT_RECOMMENDATIONS;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -90,59 +39,7 @@ impl RecommendationEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Recommendation>, AniListError> {
-        let query = r#"
-            query ($mediaId: Int, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    recommendations(mediaId: $mediaId, sort: RATING_DESC) {
-                        id
-                        rating
-                        userRating
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            format
-                            averageScore
-                        }
-                        mediaRecommendation {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            format
-                            averageScore
-                        }
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::recommendation::GET_RECOMMENDATIONS_FOR_MEDIA;
 
         let mut variables = HashMap::new();
         variables.insert("mediaId".to_string(), json!(media_id));
@@ -161,59 +58,7 @@ impl RecommendationEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Recommendation>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    recommendations(sort: RATING_DESC) {
-                        id
-                        rating
-                        userRating
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            format
-                            averageScore
-                        }
-                        mediaRecommendation {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            format
-                            averageScore
-                        }
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::recommendation::GET_TOP_RATED_RECOMMENDATIONS;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -227,57 +72,7 @@ impl RecommendationEndpoint {
 
     /// Get recommendation by ID
     pub async fn get_recommendation_by_id(&self, id: i32) -> Result<Recommendation, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                Recommendation(id: $id) {
-                    id
-                    rating
-                    userRating
-                    media {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        format
-                        averageScore
-                    }
-                    mediaRecommendation {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        format
-                        averageScore
-                    }
-                    user {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::recommendation::GET_RECOMMENDATION_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -295,57 +90,7 @@ impl RecommendationEndpoint {
         media_recommendation_id: i32,
         rating: Option<i32>,
     ) -> Result<Recommendation, AniListError> {
-        let query = r#"
-            mutation ($mediaId: Int, $mediaRecommendationId: Int, $rating: RecommendationRating) {
-                SaveRecommendation(mediaId: $mediaId, mediaRecommendationId: $mediaRecommendationId, rating: $rating) {
-                    id
-                    rating
-                    userRating
-                    media {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        format
-                        averageScore
-                    }
-                    mediaRecommendation {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        format
-                        averageScore
-                    }
-                    user {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::recommendation::SAVE_RECOMMENDATION;
 
         let mut variables = HashMap::new();
         variables.insert("mediaId".to_string(), json!(media_id));
@@ -380,27 +125,7 @@ impl RecommendationEndpoint {
             _ => "NO_RATING",
         };
 
-        let query = r#"
-            mutation ($recommendationId: Int, $rating: RecommendationRating) {
-                SaveRecommendation(id: $recommendationId, rating: $rating) {
-                    id
-                    rating
-                    userRating
-                    media {
-                        id
-                        title {
-                            userPreferred
-                        }
-                    }
-                    mediaRecommendation {
-                        id
-                        title {
-                            userPreferred
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::recommendation::RATE_RECOMMENDATION;
 
         let mut variables = HashMap::new();
         variables.insert("recommendationId".to_string(), json!(recommendation_id));

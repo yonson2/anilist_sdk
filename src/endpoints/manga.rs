@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::Manga;
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -15,54 +16,7 @@ impl MangaEndpoint {
 
     /// Get popular manga
     pub async fn get_popular(&self, page: i32, per_page: i32) -> Result<Vec<Manga>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    media(type: MANGA, sort: POPULARITY_DESC) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        description
-                        format
-                        status
-                        startDate {
-                            year
-                            month
-                            day
-                        }
-                        endDate {
-                            year
-                            month
-                            day
-                        }
-                        chapters
-                        volumes
-                        genres
-                        averageScore
-                        meanScore
-                        popularity
-                        favourites
-                        hashtag
-                        countryOfOrigin
-                        isAdult
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                        source
-                        updatedAt
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::manga::GET_POPULAR;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -76,49 +30,7 @@ impl MangaEndpoint {
 
     /// Get trending manga
     pub async fn get_trending(&self, page: i32, per_page: i32) -> Result<Vec<Manga>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    media(type: MANGA, sort: TRENDING_DESC) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        description
-                        format
-                        status
-                        startDate {
-                            year
-                            month
-                            day
-                        }
-                        endDate {
-                            year
-                            month
-                            day
-                        }
-                        chapters
-                        volumes
-                        genres
-                        averageScore
-                        meanScore
-                        popularity
-                        favourites
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::manga::GET_TRENDING;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -132,52 +44,7 @@ impl MangaEndpoint {
 
     /// Get manga by ID
     pub async fn get_by_id(&self, id: i32) -> Result<Manga, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                Media(id: $id, type: MANGA) {
-                    id
-                    title {
-                        romaji
-                        english
-                        native
-                        userPreferred
-                    }
-                    description
-                    format
-                    status
-                    startDate {
-                        year
-                        month
-                        day
-                    }
-                    endDate {
-                        year
-                        month
-                        day
-                    }
-                    chapters
-                    volumes
-                    genres
-                    averageScore
-                    meanScore
-                    popularity
-                    favourites
-                    hashtag
-                    countryOfOrigin
-                    isAdult
-                    coverImage {
-                        extraLarge
-                        large
-                        medium
-                        color
-                    }
-                    bannerImage
-                    source
-                    updatedAt
-                    siteUrl
-                }
-            }
-        "#;
+        let query = queries::manga::GET_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -195,39 +62,7 @@ impl MangaEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Manga>, AniListError> {
-        let query = r#"
-            query ($search: String, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    media(type: MANGA, search: $search) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        description
-                        format
-                        status
-                        chapters
-                        volumes
-                        genres
-                        averageScore
-                        meanScore
-                        popularity
-                        favourites
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::manga::SEARCH;
 
         let mut variables = HashMap::new();
         variables.insert("search".to_string(), json!(search));
@@ -246,39 +81,7 @@ impl MangaEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Manga>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    media(type: MANGA, sort: SCORE_DESC) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        description
-                        format
-                        status
-                        chapters
-                        volumes
-                        genres
-                        averageScore
-                        meanScore
-                        popularity
-                        favourites
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::manga::GET_TOP_RATED;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -296,39 +99,7 @@ impl MangaEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Manga>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    media(type: MANGA, status: RELEASING, sort: POPULARITY_DESC) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        description
-                        format
-                        status
-                        chapters
-                        volumes
-                        genres
-                        averageScore
-                        meanScore
-                        popularity
-                        favourites
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::manga::GET_RELEASING;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -346,39 +117,7 @@ impl MangaEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Manga>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    media(type: MANGA, status: FINISHED, sort: POPULARITY_DESC) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        description
-                        format
-                        status
-                        chapters
-                        volumes
-                        genres
-                        averageScore
-                        meanScore
-                        popularity
-                        favourites
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::manga::GET_COMPLETED;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));

@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::character::Character;
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -19,43 +20,7 @@ impl CharacterEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Character>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    characters(sort: FAVOURITES_DESC) {
-                        id
-                        name {
-                            first
-                            middle
-                            last
-                            full
-                            native
-                            alternative
-                            alternativeSpoiler
-                            userPreferred
-                        }
-                        image {
-                            large
-                            medium
-                        }
-                        description
-                        gender
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        age
-                        bloodType
-                        isFavourite
-                        isFavouriteBlocked
-                        siteUrl
-                        favourites
-                        modNotes
-                    }
-                }
-            }
-        "#;
+        let query = queries::character::GET_POPULAR;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -69,41 +34,7 @@ impl CharacterEndpoint {
 
     /// Get character by ID
     pub async fn get_by_id(&self, id: i32) -> Result<Character, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                Character(id: $id) {
-                    id
-                    name {
-                        first
-                        middle
-                        last
-                        full
-                        native
-                        alternative
-                        alternativeSpoiler
-                        userPreferred
-                    }
-                    image {
-                        large
-                        medium
-                    }
-                    description
-                    gender
-                    dateOfBirth {
-                        year
-                        month
-                        day
-                    }
-                    age
-                    bloodType
-                    isFavourite
-                    isFavouriteBlocked
-                    siteUrl
-                    favourites
-                    modNotes
-                }
-            }
-        "#;
+        let query = queries::character::GET_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -121,41 +52,7 @@ impl CharacterEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Character>, AniListError> {
-        let query = r#"
-            query ($search: String, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    characters(search: $search) {
-                        id
-                        name {
-                            first
-                            middle
-                            last
-                            full
-                            native
-                            alternative
-                            alternativeSpoiler
-                            userPreferred
-                        }
-                        image {
-                            large
-                            medium
-                        }
-                        description
-                        gender
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        age
-                        bloodType
-                        isFavourite
-                        siteUrl
-                        favourites
-                    }
-                }
-            }
-        "#;
+        let query = queries::character::SEARCH;
 
         let mut variables = HashMap::new();
         variables.insert("search".to_string(), json!(search));
@@ -174,39 +71,7 @@ impl CharacterEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Character>, AniListError> {
-        let query: &'static str = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    characters(sort: FAVOURITES_DESC, isBirthday: true) {
-                        id
-                        name {
-                            first
-                            middle
-                            last
-                            full
-                            native
-                            alternative
-                            userPreferred
-                        }
-                        image {
-                            large
-                            medium
-                        }
-                        description
-                        gender
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        age
-                        bloodType
-                        siteUrl
-                        favourites
-                    }
-                }
-            }
-        "#;
+        let query = queries::character::GET_TODAY_BIRTHDAY;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -225,39 +90,7 @@ impl CharacterEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Character>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    characters(sort: FAVOURITES_DESC) {
-                        id
-                        name {
-                            first
-                            middle
-                            last
-                            full
-                            native
-                            alternative
-                            userPreferred
-                        }
-                        image {
-                            large
-                            medium
-                        }
-                        description
-                        gender
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        age
-                        bloodType
-                        siteUrl
-                        favourites
-                    }
-                }
-            }
-        "#;
+        let query = queries::character::GET_MOST_FAVORITED;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));

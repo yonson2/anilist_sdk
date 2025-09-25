@@ -1,0 +1,19 @@
+mutation ($recommendationId: Int, $rating: RecommendationRating) {
+    SaveRecommendation(id: $recommendationId, rating: $rating) {
+        id
+        rating
+        userRating
+        media {
+            id
+            title {
+                userPreferred
+            }
+        }
+        mediaRecommendation {
+            id
+            title {
+                userPreferred
+            }
+        }
+    }
+}

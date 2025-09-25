@@ -1,0 +1,25 @@
+query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        activities(type: TEXT, sort: ID_DESC) {
+            ... on TextActivity {
+                id
+                userId
+                text
+                replyCount
+                likeCount
+                isLiked
+                isPinned
+                siteUrl
+                createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
+            }
+        }
+    }
+}

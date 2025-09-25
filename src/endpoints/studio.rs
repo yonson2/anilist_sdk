@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::social::Studio;
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -15,20 +16,7 @@ impl StudioEndpoint {
 
     /// Get popular studios
     pub async fn get_popular(&self, page: i32, per_page: i32) -> Result<Vec<Studio>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    studios(sort: FAVOURITES_DESC) {
-                        id
-                        name
-                        isAnimationStudio
-                        siteUrl
-                        favourites
-                        isFavourite
-                    }
-                }
-            }
-        "#;
+        let query = queries::studio::GET_POPULAR;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -42,18 +30,7 @@ impl StudioEndpoint {
 
     /// Get studio by ID
     pub async fn get_by_id(&self, id: i32) -> Result<Studio, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                Studio(id: $id) {
-                    id
-                    name
-                    isAnimationStudio
-                    siteUrl
-                    favourites
-                    isFavourite
-                }
-            }
-        "#;
+        let query = queries::studio::GET_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -71,20 +48,7 @@ impl StudioEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Studio>, AniListError> {
-        let query = r#"
-            query ($search: String, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    studios(search: $search) {
-                        id
-                        name
-                        isAnimationStudio
-                        siteUrl
-                        favourites
-                        isFavourite
-                    }
-                }
-            }
-        "#;
+        let query = queries::studio::SEARCH;
 
         let mut variables = HashMap::new();
         variables.insert("search".to_string(), json!(search));
@@ -103,20 +67,7 @@ impl StudioEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Studio>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    studios(sort: FAVOURITES_DESC) {
-                        id
-                        name
-                        isAnimationStudio
-                        siteUrl
-                        favourites
-                        isFavourite
-                    }
-                }
-            }
-        "#;
+        let query = queries::studio::GET_MOST_FAVORITED;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -130,22 +81,7 @@ impl StudioEndpoint {
 
     /// Toggle favorite status of a studio (requires authentication)
     pub async fn toggle_favorite(&self, studio_id: i32) -> Result<Studio, AniListError> {
-        let query = r#"
-            mutation ($studioId: Int) {
-                ToggleFavourite(studioId: $studioId) {
-                    studios {
-                        nodes {
-                            id
-                            name
-                            isAnimationStudio
-                            siteUrl
-                            favourites
-                            isFavourite
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::studio::TOGGLE_FAVORITE;
 
         let mut variables = HashMap::new();
         variables.insert("studioId".to_string(), json!(studio_id));

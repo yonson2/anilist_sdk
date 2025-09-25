@@ -1,0 +1,28 @@
+mutation ($title: String, $body: String, $categories: [Int]) {
+    SaveThread(title: $title, body: $body, categories: $categories) {
+        id
+        title
+        body
+        userId
+        categories {
+            id
+            name
+        }
+        isLocked
+        isSticky
+        likeCount
+        replyCount
+        viewCount
+        createdAt
+        updatedAt
+        siteUrl
+        user {
+            id
+            name
+            avatar {
+                large
+                medium
+            }
+        }
+    }
+}

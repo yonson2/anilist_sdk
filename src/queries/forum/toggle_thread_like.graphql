@@ -1,0 +1,11 @@
+mutation ($id: Int, $type: LikeableType) {
+    ToggleLikeV2(id: $id, type: $type) {
+        ... on Thread {
+            id
+            title
+            likeCount
+            isLiked
+            siteUrl
+        }
+    }
+}

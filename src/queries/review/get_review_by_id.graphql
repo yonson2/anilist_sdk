@@ -1,0 +1,42 @@
+query ($id: Int) {
+    Review(id: $id) {
+        id
+        userId
+        mediaId
+        mediaType
+        summary
+        body
+        rating
+        ratingAmount
+        userRating
+        score
+        private
+        siteUrl
+        createdAt
+        updatedAt
+        user {
+            id
+            name
+            avatar {
+                large
+                medium
+            }
+        }
+        media {
+            id
+            title {
+                romaji
+                english
+                native
+                userPreferred
+            }
+            coverImage {
+                extraLarge
+                large
+                medium
+                color
+            }
+            bannerImage
+        }
+    }
+}

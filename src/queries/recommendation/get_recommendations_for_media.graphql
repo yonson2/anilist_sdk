@@ -1,0 +1,51 @@
+query ($mediaId: Int, $page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        recommendations(mediaId: $mediaId, sort: RATING_DESC) {
+            id
+            rating
+            userRating
+            media {
+                id
+                title {
+                    romaji
+                    english
+                    native
+                    userPreferred
+                }
+                coverImage {
+                    extraLarge
+                    large
+                    medium
+                    color
+                }
+                format
+                averageScore
+            }
+            mediaRecommendation {
+                id
+                title {
+                    romaji
+                    english
+                    native
+                    userPreferred
+                }
+                coverImage {
+                    extraLarge
+                    large
+                    medium
+                    color
+                }
+                format
+                averageScore
+            }
+            user {
+                id
+                name
+                avatar {
+                    large
+                    medium
+                }
+            }
+        }
+    }
+}

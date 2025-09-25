@@ -1,0 +1,44 @@
+query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        reviews(sort: RATING_DESC) {
+            id
+            userId
+            mediaId
+            mediaType
+            summary
+            body
+            rating
+            ratingAmount
+            userRating
+            score
+            private
+            siteUrl
+            createdAt
+            updatedAt
+            user {
+                id
+                name
+                avatar {
+                    large
+                    medium
+                }
+            }
+            media {
+                id
+                title {
+                    romaji
+                    english
+                    native
+                    userPreferred
+                }
+                coverImage {
+                    extraLarge
+                    large
+                    medium
+                    color
+                }
+                bannerImage
+            }
+        }
+    }
+}

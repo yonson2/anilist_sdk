@@ -1,0 +1,10 @@
+query ($id: Int) {
+    Studio(id: $id) {
+        id
+        name
+        isAnimationStudio
+        siteUrl
+        favourites
+        isFavourite
+    }
+}

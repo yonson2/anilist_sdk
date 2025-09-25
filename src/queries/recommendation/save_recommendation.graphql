@@ -1,0 +1,49 @@
+mutation ($mediaId: Int, $mediaRecommendationId: Int, $rating: RecommendationRating) {
+    SaveRecommendation(mediaId: $mediaId, mediaRecommendationId: $mediaRecommendationId, rating: $rating) {
+        id
+        rating
+        userRating
+        media {
+            id
+            title {
+                romaji
+                english
+                native
+                userPreferred
+            }
+            coverImage {
+                extraLarge
+                large
+                medium
+                color
+            }
+            format
+            averageScore
+        }
+        mediaRecommendation {
+            id
+            title {
+                romaji
+                english
+                native
+                userPreferred
+            }
+            coverImage {
+                extraLarge
+                large
+                medium
+                color
+            }
+            format
+            averageScore
+        }
+        user {
+            id
+            name
+            avatar {
+                large
+                medium
+            }
+        }
+    }
+}

@@ -1,0 +1,41 @@
+query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        media(type: MANGA, sort: TRENDING_DESC) {
+            id
+            title {
+                romaji
+                english
+                native
+                userPreferred
+            }
+            description
+            format
+            status
+            startDate {
+                year
+                month
+                day
+            }
+            endDate {
+                year
+                month
+                day
+            }
+            chapters
+            volumes
+            genres
+            averageScore
+            meanScore
+            popularity
+            favourites
+            coverImage {
+                extraLarge
+                large
+                medium
+                color
+            }
+            bannerImage
+            siteUrl
+        }
+    }
+}

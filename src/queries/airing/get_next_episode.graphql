@@ -1,0 +1,17 @@
+query ($mediaId: Int, $airingAtGreater: Int) {
+    Page(page: 1, perPage: 1) {
+        airingSchedules(mediaId: $mediaId, airingAt_greater: $airingAtGreater, sort: TIME) {
+            id
+            airingAt
+            timeUntilAiring
+            episode
+            mediaId
+            media {
+                id
+                title {
+                    userPreferred
+                }
+            }
+        }
+    }
+}

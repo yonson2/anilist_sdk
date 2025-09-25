@@ -18,110 +18,7 @@ impl UserEndpoint {
 
     /// Get the currently authenticated user (requires token)
     pub async fn get_current_user(&self) -> Result<User, AniListError> {
-        let query = r#"
-            query {
-                Viewer {
-                    id
-                    name
-                    about
-                    avatar {
-                        large
-                        medium
-                    }
-                    bannerImage
-                    options {
-                        titleLanguage
-                        displayAdultContent
-                        airingNotifications
-                        profileColor
-                        timezone
-                        activityMergeTime
-                        staffNameLanguage
-                    }
-                    mediaListOptions {
-                        scoreFormat
-                        rowOrder
-                        animeList {
-                            sectionOrder
-                            splitCompletedSectionByFormat
-                            customLists
-                            advancedScoring
-                            advancedScoringEnabled
-                        }
-                        mangaList {
-                            sectionOrder
-                            splitCompletedSectionByFormat
-                            customLists
-                            advancedScoring
-                            advancedScoringEnabled
-                        }
-                    }
-                    favourites {
-                        anime {
-                            nodes {
-                                id
-                                title {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        manga {
-                            nodes {
-                                id
-                                title {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        characters {
-                            nodes {
-                                id
-                                name {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        staff {
-                            nodes {
-                                id
-                                name {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        studios {
-                            nodes {
-                                id
-                                name
-                            }
-                        }
-                    }
-                    statistics {
-                        anime {
-                            count
-                            meanScore
-                            standardDeviation
-                            minutesWatched
-                            episodesWatched
-                        }
-                        manga {
-                            count
-                            meanScore
-                            standardDeviation
-                            chaptersRead
-                            volumesRead
-                        }
-                    }
-                    unreadNotificationCount
-                    siteUrl
-                    donatorTier
-                    donatorBadge
-                    moderatorRoles
-                    createdAt
-                    updatedAt
-                }
-            }
-        "#;
+        let query = queries::user::GET_CURRENT_USER;
 
         let response = self.client.query(query, None).await?;
         let data = response["data"]["Viewer"].clone();
@@ -134,70 +31,7 @@ impl UserEndpoint {
         &self,
         status: Option<&str>,
     ) -> Result<Vec<MediaList>, AniListError> {
-        let query = r#"
-            query ($userId: Int, $type: MediaType, $status: MediaListStatus) {
-                MediaListCollection(userId: $userId, type: $type, status: $status) {
-                    lists {
-                        entries {
-                            id
-                            userId
-                            mediaId
-                            status
-                            score
-                            progress
-                            progressVolumes
-                            repeat
-                            priority
-                            private
-                            notes
-                            hiddenFromStatusLists
-                            startedAt {
-                                year
-                                month
-                                day
-                            }
-                            completedAt {
-                                year
-                                month
-                                day
-                            }
-                            updatedAt
-                            createdAt
-                            media {
-                                id
-                                idMal
-                                nextAiringEpisode {
-                                    id
-                                    airingAt
-                                    timeUntilAiring
-                                    episode
-                                    mediaId
-                                }
-                                title {
-                                    romaji
-                                    english
-                                    native
-                                    userPreferred
-                                }
-                                coverImage {
-                                    extraLarge
-                                    large
-                                    medium
-                                    color
-                                }
-                                format
-                                status
-                                episodes
-                                season
-                                seasonYear
-                                averageScore
-                                genres
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::user::GET_CURRENT_USER_ANIME_LIST;
 
         let mut variables = HashMap::new();
         variables.insert("type".to_string(), json!("ANIME"));
@@ -231,113 +65,7 @@ impl UserEndpoint {
 
     /// Get user by ID
     pub async fn get_by_id(&self, id: i32) -> Result<User, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                User(id: $id) {
-                    id
-                    name
-                    about
-                    avatar {
-                        large
-                        medium
-                    }
-                    bannerImage
-                    isFollowing
-                    isFollower
-                    isBlocked
-                    options {
-                        titleLanguage
-                        displayAdultContent
-                        airingNotifications
-                        profileColor
-                        timezone
-                        activityMergeTime
-                        staffNameLanguage
-                    }
-                    mediaListOptions {
-                        scoreFormat
-                        rowOrder
-                        animeList {
-                            sectionOrder
-                            splitCompletedSectionByFormat
-                            customLists
-                            advancedScoring
-                            advancedScoringEnabled
-                        }
-                        mangaList {
-                            sectionOrder
-                            splitCompletedSectionByFormat
-                            customLists
-                            advancedScoring
-                            advancedScoringEnabled
-                        }
-                    }
-                    favourites {
-                        anime {
-                            nodes {
-                                id
-                                title {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        manga {
-                            nodes {
-                                id
-                                title {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        characters {
-                            nodes {
-                                id
-                                name {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        staff {
-                            nodes {
-                                id
-                                name {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        studios {
-                            nodes {
-                                id
-                                name
-                            }
-                        }
-                    }
-                    statistics {
-                        anime {
-                            count
-                            meanScore
-                            standardDeviation
-                            minutesWatched
-                            episodesWatched
-                        }
-                        manga {
-                            count
-                            meanScore
-                            standardDeviation
-                            chaptersRead
-                            volumesRead
-                        }
-                    }
-                    unreadNotificationCount
-                    siteUrl
-                    donatorTier
-                    donatorBadge
-                    moderatorRoles
-                    createdAt
-                    updatedAt
-                }
-            }
-        "#;
+        let query = queries::user::GET_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -350,113 +78,7 @@ impl UserEndpoint {
 
     /// Get user by name
     pub async fn get_by_name(&self, name: &str) -> Result<User, AniListError> {
-        let query = r#"
-            query ($name: String) {
-                User(name: $name) {
-                    id
-                    name
-                    about
-                    avatar {
-                        large
-                        medium
-                    }
-                    bannerImage
-                    isFollowing
-                    isFollower
-                    isBlocked
-                    options {
-                        titleLanguage
-                        displayAdultContent
-                        airingNotifications
-                        profileColor
-                        timezone
-                        activityMergeTime
-                        staffNameLanguage
-                    }
-                    mediaListOptions {
-                        scoreFormat
-                        rowOrder
-                        animeList {
-                            sectionOrder
-                            splitCompletedSectionByFormat
-                            customLists
-                            advancedScoring
-                            advancedScoringEnabled
-                        }
-                        mangaList {
-                            sectionOrder
-                            splitCompletedSectionByFormat
-                            customLists
-                            advancedScoring
-                            advancedScoringEnabled
-                        }
-                    }
-                    favourites {
-                        anime {
-                            nodes {
-                                id
-                                title {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        manga {
-                            nodes {
-                                id
-                                title {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        characters {
-                            nodes {
-                                id
-                                name {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        staff {
-                            nodes {
-                                id
-                                name {
-                                    userPreferred
-                                }
-                            }
-                        }
-                        studios {
-                            nodes {
-                                id
-                                name
-                            }
-                        }
-                    }
-                    statistics {
-                        anime {
-                            count
-                            meanScore
-                            standardDeviation
-                            minutesWatched
-                            episodesWatched
-                        }
-                        manga {
-                            count
-                            meanScore
-                            standardDeviation
-                            chaptersRead
-                            volumesRead
-                        }
-                    }
-                    unreadNotificationCount
-                    siteUrl
-                    donatorTier
-                    donatorBadge
-                    moderatorRoles
-                    createdAt
-                    updatedAt
-                }
-            }
-        "#;
+        let query = queries::user::GET_BY_NAME;
 
         let mut variables = HashMap::new();
         variables.insert("name".to_string(), json!(name));
@@ -474,40 +96,7 @@ impl UserEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<User>, AniListError> {
-        let query = r#"
-            query ($search: String, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    users(search: $search) {
-                        id
-                        name
-                        about
-                        avatar {
-                            large
-                            medium
-                        }
-                        bannerImage
-                        statistics {
-                            anime {
-                                count
-                                meanScore
-                                minutesWatched
-                                episodesWatched
-                            }
-                            manga {
-                                count
-                                meanScore
-                                chaptersRead
-                                volumesRead
-                            }
-                        }
-                        siteUrl
-                        donatorTier
-                        createdAt
-                        updatedAt
-                    }
-                }
-            }
-        "#;
+        let query = queries::user::SEARCH;
 
         let mut variables = HashMap::new();
         variables.insert("search".to_string(), json!(search));
@@ -526,37 +115,7 @@ impl UserEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<User>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    users(sort: WATCHED_TIME_DESC) {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                        statistics {
-                            anime {
-                                count
-                                meanScore
-                                minutesWatched
-                                episodesWatched
-                            }
-                            manga {
-                                count
-                                meanScore
-                                chaptersRead
-                                volumesRead
-                            }
-                        }
-                        siteUrl
-                        donatorTier
-                        createdAt
-                    }
-                }
-            }
-        "#;
+        let query = queries::user::GET_MOST_ANIME_WATCHED;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -574,37 +133,7 @@ impl UserEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<User>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    users(sort: CHAPTERS_READ_DESC) {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                        statistics {
-                            anime {
-                                count
-                                meanScore
-                                minutesWatched
-                                episodesWatched
-                            }
-                            manga {
-                                count
-                                meanScore
-                                chaptersRead
-                                volumesRead
-                            }
-                        }
-                        siteUrl
-                        donatorTier
-                        createdAt
-                    }
-                }
-            }
-        "#;
+        let query = queries::user::GET_MOST_MANGA_READ;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));

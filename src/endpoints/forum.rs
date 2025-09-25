@@ -20,54 +20,7 @@ impl ForumEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Thread>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    threads(sort: UPDATED_AT_DESC) {
-                        id
-                        title
-                        body
-                        userId
-                        replyUserId
-                        replyCommentId
-                        categories {
-                            id
-                            name
-                        }
-                        isLocked
-                        isSticky
-                        isSubscribed
-                        likeCount
-                        isLiked
-                        repliedAt
-                        createdAt
-                        updatedAt
-                        replyCount
-                        viewCount
-                        siteUrl
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                            donatorTier
-                            donatorBadge
-                            moderatorRoles
-                        }
-                        replyUser {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::forum::GET_RECENT_THREADS;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -81,52 +34,7 @@ impl ForumEndpoint {
 
     /// Get thread by ID
     pub async fn get_thread_by_id(&self, id: i32) -> Result<Thread, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                Thread(id: $id) {
-                    id
-                    title
-                    body
-                    userId
-                    replyUserId
-                    replyCommentId
-                    categories {
-                        id
-                        name
-                    }
-                    isLocked
-                    isSticky
-                    isSubscribed
-                    likeCount
-                    isLiked
-                    repliedAt
-                    createdAt
-                    updatedAt
-                    replyCount
-                    viewCount
-                    siteUrl
-                    user {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                        donatorTier
-                        donatorBadge
-                        moderatorRoles
-                    }
-                    replyUser {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::forum::GET_THREAD_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -144,36 +52,7 @@ impl ForumEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Thread>, AniListError> {
-        let query = r#"
-            query ($search: String, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    threads(search: $search, sort: SEARCH_MATCH) {
-                        id
-                        title
-                        body
-                        userId
-                        categories {
-                            id
-                            name
-                        }
-                        likeCount
-                        replyCount
-                        viewCount
-                        createdAt
-                        updatedAt
-                        siteUrl
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::forum::SEARCH_THREADS;
 
         let mut variables = HashMap::new();
         variables.insert("search".to_string(), json!(search));
@@ -193,33 +72,7 @@ impl ForumEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<ThreadComment>, AniListError> {
-        let query = r#"
-            query ($threadId: Int, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    threadComments(threadId: $threadId) {
-                        id
-                        userId
-                        threadId
-                        comment
-                        likeCount
-                        isLiked
-                        createdAt
-                        updatedAt
-                        siteUrl
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                            donatorTier
-                            moderatorRoles
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::forum::GET_THREAD_COMMENTS;
 
         let mut variables = HashMap::new();
         variables.insert("threadId".to_string(), json!(thread_id));
@@ -239,36 +92,7 @@ impl ForumEndpoint {
         body: &str,
         categories: Option<Vec<i32>>,
     ) -> Result<Thread, AniListError> {
-        let query = r#"
-            mutation ($title: String, $body: String, $categories: [Int]) {
-                SaveThread(title: $title, body: $body, categories: $categories) {
-                    id
-                    title
-                    body
-                    userId
-                    categories {
-                        id
-                        name
-                    }
-                    isLocked
-                    isSticky
-                    likeCount
-                    replyCount
-                    viewCount
-                    createdAt
-                    updatedAt
-                    siteUrl
-                    user {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::forum::CREATE_THREAD;
 
         let mut variables = HashMap::new();
         variables.insert("title".to_string(), json!(title));
@@ -303,19 +127,7 @@ impl ForumEndpoint {
 
     /// Toggle like on a thread (requires authentication)
     pub async fn toggle_thread_like(&self, id: i32) -> Result<Thread, AniListError> {
-        let query = r#"
-            mutation ($id: Int, $type: LikeableType) {
-                ToggleLikeV2(id: $id, type: $type) {
-                    ... on Thread {
-                        id
-                        title
-                        likeCount
-                        isLiked
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::forum::TOGGLE_THREAD_LIKE;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));

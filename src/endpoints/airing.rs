@@ -1,6 +1,7 @@
 use crate::client::AniListClient;
 use crate::error::AniListError;
 use crate::models::social::AiringSchedule;
+use crate::queries;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -19,38 +20,7 @@ impl AiringEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<AiringSchedule>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int, $airingAtGreater: Int, $sort: [AiringSort]) {
-                Page(page: $page, perPage: $perPage) {
-                    airingSchedules(airingAt_greater: $airingAtGreater, sort: $sort) {
-                        id
-                        airingAt
-                        timeUntilAiring
-                        episode
-                        mediaId
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            bannerImage
-                            episodes
-                            format
-                            siteUrl
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::airing::GET_UPCOMING_EPISODES;
 
         let current_timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -83,38 +53,7 @@ impl AiringEndpoint {
         let start_of_day = now - (now % 86400); // Beginning of today
         let end_of_day = start_of_day + 86400; // End of today
 
-        let query = r#"
-            query ($page: Int, $perPage: Int, $airingAtGreater: Int, $airingAtLesser: Int, $sort: [AiringSort]) {
-                Page(page: $page, perPage: $perPage) {
-                    airingSchedules(airingAt_greater: $airingAtGreater, airingAt_lesser: $airingAtLesser, sort: $sort) {
-                        id
-                        airingAt
-                        timeUntilAiring
-                        episode
-                        mediaId
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            bannerImage
-                            episodes
-                            format
-                            siteUrl
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::airing::GET_TODAY_EPISODES;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -140,38 +79,7 @@ impl AiringEndpoint {
             .unwrap()
             .as_secs() as i64;
 
-        let query = r#"
-            query ($page: Int, $perPage: Int, $airingAtLesser: Int, $sort: [AiringSort]) {
-                Page(page: $page, perPage: $perPage) {
-                    airingSchedules(airingAt_lesser: $airingAtLesser, sort: $sort) {
-                        id
-                        airingAt
-                        timeUntilAiring
-                        episode
-                        mediaId
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            bannerImage
-                            episodes
-                            format
-                            siteUrl
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::airing::GET_RECENTLY_AIRED;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -192,38 +100,7 @@ impl AiringEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<AiringSchedule>, AniListError> {
-        let query = r#"
-            query ($mediaId: Int, $page: Int, $perPage: Int, $sort: [AiringSort]) {
-                Page(page: $page, perPage: $perPage) {
-                    airingSchedules(mediaId: $mediaId, sort: $sort) {
-                        id
-                        airingAt
-                        timeUntilAiring
-                        episode
-                        mediaId
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            bannerImage
-                            episodes
-                            format
-                            siteUrl
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::airing::GET_SCHEDULE_FOR_MEDIA;
 
         let mut variables = HashMap::new();
         variables.insert("mediaId".to_string(), json!(media_id));
@@ -239,36 +116,7 @@ impl AiringEndpoint {
 
     /// Get airing schedule by ID
     pub async fn get_schedule_by_id(&self, id: i32) -> Result<AiringSchedule, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                AiringSchedule(id: $id) {
-                    id
-                    airingAt
-                    timeUntilAiring
-                    episode
-                    mediaId
-                    media {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                            userPreferred
-                        }
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                            color
-                        }
-                        bannerImage
-                        episodes
-                        format
-                        siteUrl
-                    }
-                }
-            }
-        "#;
+        let query = queries::airing::GET_SCHEDULE_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -287,38 +135,7 @@ impl AiringEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<AiringSchedule>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int, $airingAtGreater: Int, $airingAtLesser: Int, $sort: [AiringSort]) {
-                Page(page: $page, perPage: $perPage) {
-                    airingSchedules(airingAt_greater: $airingAtGreater, airingAt_lesser: $airingAtLesser, sort: $sort) {
-                        id
-                        airingAt
-                        timeUntilAiring
-                        episode
-                        mediaId
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                                userPreferred
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                                color
-                            }
-                            bannerImage
-                            episodes
-                            format
-                            siteUrl
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::airing::GET_EPISODES_IN_RANGE;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -343,25 +160,7 @@ impl AiringEndpoint {
             .unwrap()
             .as_secs() as i64;
 
-        let query = r#"
-            query ($mediaId: Int, $airingAtGreater: Int) {
-                Page(page: 1, perPage: 1) {
-                    airingSchedules(mediaId: $mediaId, airingAt_greater: $airingAtGreater, sort: TIME) {
-                        id
-                        airingAt
-                        timeUntilAiring
-                        episode
-                        mediaId
-                        media {
-                            id
-                            title {
-                                userPreferred
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::airing::GET_NEXT_EPISODE;
 
         let mut variables = HashMap::new();
         variables.insert("mediaId".to_string(), json!(media_id));

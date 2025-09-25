@@ -1,0 +1,14 @@
+mutation ($studioId: Int) {
+    ToggleFavourite(studioId: $studioId) {
+        studios {
+            nodes {
+                id
+                name
+                isAnimationStudio
+                siteUrl
+                favourites
+                isFavourite
+            }
+        }
+    }
+}

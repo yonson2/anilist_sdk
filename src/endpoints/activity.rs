@@ -20,78 +20,7 @@ impl ActivityEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Activity>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    activities(sort: ID_DESC) {
-                        ... on TextActivity {
-                            id
-                            userId
-                            type
-                            replyCount
-                            likeCount
-                            isLiked
-                            isSubscribed
-                            createdAt
-                            siteUrl
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ListActivity {
-                            id
-                            userId
-                            type
-                            replyCount
-                            likeCount
-                            isLiked
-                            createdAt
-                            siteUrl
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on MessageActivity {
-                            id
-                            recipientId
-                            messengerId
-                            type
-                            replyCount
-                            likeCount
-                            isLiked
-                            createdAt
-                            siteUrl
-                            recipient {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                            messenger {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::GET_RECENT_ACTIVITIES;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -109,51 +38,7 @@ impl ActivityEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Activity>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    activities(sort: ID_DESC, isFollowing: true) {
-                        ... on TextActivity {
-                            id
-                            userId
-                            type
-                            replyCount
-                            likeCount
-                            isLiked
-                            isSubscribed
-                            createdAt
-                            siteUrl
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ListActivity {
-                            id
-                            userId
-                            type
-                            replyCount
-                            likeCount
-                            isLiked
-                            createdAt
-                            siteUrl
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::GET_FOLLOWING_ACTIVITIES;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -172,51 +57,7 @@ impl ActivityEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<Activity>, AniListError> {
-        let query = r#"
-            query ($userId: Int, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    activities(userId: $userId, sort: ID_DESC) {
-                        ... on TextActivity {
-                            id
-                            userId
-                            type
-                            replyCount
-                            likeCount
-                            isLiked
-                            isSubscribed
-                            createdAt
-                            siteUrl
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                        ... on ListActivity {
-                            id
-                            userId
-                            type
-                            replyCount
-                            likeCount
-                            isLiked
-                            createdAt
-                            siteUrl
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::GET_USER_ACTIVITIES;
 
         let mut variables = HashMap::new();
         variables.insert("userId".to_string(), json!(user_id));
@@ -235,33 +76,7 @@ impl ActivityEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<TextActivity>, AniListError> {
-        let query = r#"
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    activities(type: TEXT, sort: ID_DESC) {
-                        ... on TextActivity {
-                            id
-                            userId
-                            text
-                            replyCount
-                            likeCount
-                            isLiked
-                            isPinned
-                            siteUrl
-                            createdAt
-                            user {
-                                id
-                                name
-                                avatar {
-                                    large
-                                    medium
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::GET_TEXT_ACTIVITIES;
 
         let mut variables = HashMap::new();
         variables.insert("page".to_string(), json!(page));
@@ -275,76 +90,7 @@ impl ActivityEndpoint {
 
     /// Get activity by ID
     pub async fn get_activity_by_id(&self, id: i32) -> Result<Activity, AniListError> {
-        let query = r#"
-            query ($id: Int) {
-                Activity(id: $id) {
-                    ... on TextActivity {
-                        id
-                        userId
-                        type
-                        replyCount
-                        likeCount
-                        isLiked
-                        isSubscribed
-                        createdAt
-                        siteUrl
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                    }
-                    ... on ListActivity {
-                        id
-                        userId
-                        type
-                        replyCount
-                        likeCount
-                        isLiked
-                        createdAt
-                        siteUrl
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                    }
-                    ... on MessageActivity {
-                        id
-                        recipientId
-                        messengerId
-                        type
-                        replyCount
-                        likeCount
-                        isLiked
-                        createdAt
-                        siteUrl
-                        recipient {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                        messenger {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::GET_ACTIVITY_BY_ID;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -362,29 +108,7 @@ impl ActivityEndpoint {
         page: i32,
         per_page: i32,
     ) -> Result<Vec<ActivityReply>, AniListError> {
-        let query = r#"
-            query ($activityId: Int, $page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    activityReplies(activityId: $activityId) {
-                        id
-                        userId
-                        activityId
-                        text
-                        likeCount
-                        isLiked
-                        createdAt
-                        user {
-                            id
-                            name
-                            avatar {
-                                large
-                                medium
-                            }
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::GET_ACTIVITY_REPLIES;
 
         let mut variables = HashMap::new();
         variables.insert("activityId".to_string(), json!(activity_id));
@@ -399,29 +123,7 @@ impl ActivityEndpoint {
 
     /// Create a text activity (requires authentication)
     pub async fn create_text_activity(&self, text: &str) -> Result<TextActivity, AniListError> {
-        let query = r#"
-            mutation ($text: String) {
-                SaveTextActivity(text: $text) {
-                    id
-                    userId
-                    text
-                    replyCount
-                    likeCount
-                    isLiked
-                    isPinned
-                    siteUrl
-                    createdAt
-                    user {
-                        id
-                        name
-                        avatar {
-                            large
-                            medium
-                        }
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::CREATE_TEXT_ACTIVITY;
 
         let mut variables = HashMap::new();
         variables.insert("text".to_string(), json!(text));
@@ -466,18 +168,7 @@ impl ActivityEndpoint {
 
     /// Toggle like on an activity reply (requires authentication)
     pub async fn toggle_activity_reply_like(&self, id: i32) -> Result<ActivityReply, AniListError> {
-        let query = r#"
-            mutation ($id: Int, $type: LikeableType) {
-                ToggleLikeV2(id: $id, type: $type) {
-                    ... on ActivityReply {
-                        id
-                        text
-                        likeCount
-                        isLiked
-                    }
-                }
-            }
-        "#;
+        let query = queries::activity::TOGGLE_ACTIVITY_REPLY_LIKE;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
@@ -491,13 +182,7 @@ impl ActivityEndpoint {
 
     /// Delete an activity (requires authentication and ownership)
     pub async fn delete_activity(&self, id: i32) -> Result<bool, AniListError> {
-        let query = r#"
-            mutation ($id: Int) {
-                DeleteActivity(id: $id) {
-                    deleted
-                }
-            }
-        "#;
+        let query = queries::activity::DELETE_ACTIVITY;
 
         let mut variables = HashMap::new();
         variables.insert("id".to_string(), json!(id));
