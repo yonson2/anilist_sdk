@@ -1,12 +1,7 @@
 use anilist_sdk::client::AniListClient;
 use dotenv::dotenv;
 use std::env;
-use tokio::time::{Duration, sleep};
-
-/// Helper function to add rate limiting between test requests
-async fn rate_limit() {
-    sleep(Duration::from_secs(1)).await;
-}
+mod test_utils;
 
 #[tokio::test]
 #[cfg_attr(feature = "ci", ignore)]
@@ -18,15 +13,12 @@ async fn test_authenticated_client_creation() {
 
     // We can't test actual authenticated calls without a real token,
     // but we can verify the client is created correctly
-
-    rate_limit().await;
 }
 
 #[tokio::test]
 #[cfg_attr(feature = "ci", ignore)]
 async fn test_unauthenticated_vs_authenticated_client() {
     dotenv().ok();
-    rate_limit().await;
 
     // Test that both client types work for public endpoints
     let unauth_client = AniListClient::new();
@@ -34,10 +26,8 @@ async fn test_unauthenticated_vs_authenticated_client() {
     let auth_client = AniListClient::with_token(token.to_string());
 
     // Both should be able to access public endpoints
-    let unauth_result = unauth_client.anime().get_popular(1, 1).await;
-    rate_limit().await;
-
-    let auth_result = auth_client.anime().get_popular(1, 1).await;
+    let unauth_result = crate::anime_api_call!(unauth_client, get_popular, 1, 1);
+    let auth_result = crate::anime_api_call!(auth_client, get_popular, 1, 1);
 
     // Both should succeed (or both should fail with the same type of error)
     match (unauth_result, auth_result) {
@@ -54,18 +44,14 @@ async fn test_unauthenticated_vs_authenticated_client() {
             );
         }
     }
-
-    rate_limit().await;
 }
 
 #[tokio::test]
 #[cfg_attr(feature = "ci", ignore)]
 async fn test_current_user_without_token() {
-    rate_limit().await;
-
     // Test that current user endpoint fails without authentication
     let client = AniListClient::new();
-    let result = client.user().get_current_user().await;
+    let result = crate::user_api_call!(client, get_current_user);
 
     // This should fail since we don't have a token
     assert!(
@@ -83,7 +69,7 @@ async fn test_authenticated_current_user() {
     if let Ok(token) = env::var("ANILIST_TOKEN") {
         if !token.is_empty() && token != "fake_token" {
             let client = AniListClient::with_token(token);
-            let result = client.user().get_current_user().await;
+            let result = crate::user_api_call!(client, get_current_user);
 
             match result {
                 Ok(user) => {
@@ -114,10 +100,11 @@ async fn test_authenticated_user_anime_list() {
             let client = AniListClient::with_token(token);
 
             // First get the current user
-            let user_result = client.user().get_current_user().await;
+            let user_result = crate::user_api_call!(client, get_current_user);
             if let Ok(_user) = user_result {
                 // Now try to get their anime list
-                let anime_list_result = client.user().get_current_user_anime_list(None).await;
+                let anime_list_result =
+                    crate::user_api_call!(client, get_current_user_anime_list, None);
 
                 match anime_list_result {
                     Ok(anime_list) => {
@@ -159,7 +146,7 @@ async fn test_token_validation() {
             let client = AniListClient::with_token(token);
 
             // Test that we can make a basic authenticated request
-            let result = client.user().get_current_user().await;
+            let result = crate::user_api_call!(client, get_current_user);
 
             match result {
                 Ok(user) => {

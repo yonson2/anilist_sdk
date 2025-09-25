@@ -1,5 +1,6 @@
 use anilist_sdk::client::AniListClient;
 use std::env;
+mod test_utils;
 
 #[tokio::test]
 async fn test_get_notifications() {
@@ -10,10 +11,9 @@ async fn test_get_notifications() {
     };
 
     let client = AniListClient::with_token(token);
-    let result = client.notification().get_notifications(1, 10).await;
+    let result = crate::notification_api_call!(client, get_notifications, 1, 10);
 
-    assert!(result.is_ok());
-    let notifications = result.unwrap();
+    let notifications = result.expect("Failed to get notifications");
 
     for notification in &notifications {
         assert!(notification.id > 0);
@@ -33,13 +33,10 @@ async fn test_get_notifications_by_type() {
     };
 
     let client = AniListClient::with_token(token);
-    let result = client
-        .notification()
-        .get_notifications_by_type("ActivityMessage", 1, 5)
-        .await;
+    let result =
+        crate::notification_api_call!(client, get_notifications_by_type, "ActivityMessage", 1, 5);
 
-    assert!(result.is_ok());
-    let notifications = result.unwrap();
+    let notifications = result.expect("Failed to get notifications by type");
 
     for notification in &notifications {
         assert!(notification.id > 0);
@@ -61,14 +58,16 @@ async fn test_mark_notifications_as_read() {
     let client = AniListClient::with_token(token);
 
     // First try to get some notifications to mark as read
-    let notifications_result = client.notification().get_notifications(1, 1).await;
+    let notifications_result = crate::notification_api_call!(client, get_notifications, 1, 1);
     if let Ok(notifications) = notifications_result
         && let Some(notification) = notifications.first()
     {
-        let result = client
-            .notification()
-            .mark_notifications_as_read(vec![notification.id])
-            .await;
+        let notification_id = notification.id;
+        let result = crate::notification_api_call!(
+            client,
+            mark_notifications_as_read,
+            vec![notification_id]
+        );
         // This might fail if the notification is already read or doesn't belong to user
         match result {
             Ok(success) => assert!(success),
@@ -88,9 +87,8 @@ async fn test_get_unread_count() {
     };
 
     let client = AniListClient::with_token(token);
-    let result = client.notification().get_unread_count().await;
+    let result = crate::notification_api_call!(client, get_unread_count);
 
-    assert!(result.is_ok());
-    let count = result.unwrap();
+    let count = result.expect("Failed to get unread count");
     assert!(count >= 0);
 }

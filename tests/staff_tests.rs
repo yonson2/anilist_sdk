@@ -1,19 +1,13 @@
 use anilist_sdk::client::AniListClient;
 use chrono::prelude::*;
-use tokio::time::{Duration, sleep};
-
-/// Helper function to add rate limiting between test requests
-async fn rate_limit() {
-    sleep(Duration::from_secs(1)).await;
-}
+mod test_utils;
 
 #[tokio::test]
 async fn test_get_popular_staff() {
     let client = AniListClient::new();
-    let result = client.staff().get_popular(1, 5).await;
+    let result = crate::staff_api_call!(client, get_popular, 1, 5);
 
-    assert!(result.is_ok());
-    let staff_list = result.unwrap();
+    let staff_list = result.expect("Failed to get popular staff");
     assert!(!staff_list.is_empty());
     assert!(staff_list.len() <= 5);
 
@@ -22,35 +16,25 @@ async fn test_get_popular_staff() {
         assert!(staff.id > 0);
         assert!(staff.name.is_some());
     }
-
-    rate_limit().await;
 }
 
 #[tokio::test]
 async fn test_get_staff_by_id() {
-    rate_limit().await;
-
     let client = AniListClient::new();
     // Using Ikue Ootani's ID (95128)
-    let result = client.staff().get_by_id(95128).await;
+    let result = crate::staff_api_call!(client, get_by_id, 95128);
 
-    assert!(result.is_ok());
-    let staff = result.unwrap();
+    let staff = result.expect("Failed to get staff by ID");
     assert_eq!(staff.id, 95128);
     assert!(staff.name.is_some());
-
-    rate_limit().await;
 }
 
 #[tokio::test]
 async fn test_search_staff() {
-    rate_limit().await;
-
     let client = AniListClient::new();
-    let result = client.staff().search("Miyazaki", 1, 5).await;
+    let result = crate::staff_api_call!(client, search, "Miyazaki", 1, 5);
 
-    assert!(result.is_ok());
-    let staff_list = result.unwrap();
+    let staff_list = result.expect("Failed to search staff");
     assert!(!staff_list.is_empty());
 
     // Check that results contain "Miyazaki" in some form
@@ -68,22 +52,17 @@ async fn test_search_staff() {
         }
     });
     assert!(has_miyazaki);
-
-    rate_limit().await;
 }
 
 #[tokio::test]
 async fn test_get_staff_today_birthday() {
-    rate_limit().await;
-
     let client = AniListClient::new();
     let today = Local::now().date_naive();
     let day = today.day() as i32;
     let month = today.month() as i32;
-    let result = client.staff().get_today_birthday(1, 10).await;
+    let result = crate::staff_api_call!(client, get_today_birthday, 1, 10);
 
-    assert!(result.is_ok());
-    let staff_list = result.unwrap();
+    let staff_list = result.expect("Failed to get staff with today's birthday");
     // Note: This might be empty if no staff have this birthday
 
     for staff in &staff_list {
@@ -93,19 +72,14 @@ async fn test_get_staff_today_birthday() {
             assert_eq!(birth_date.day, Some(day));
         }
     }
-
-    rate_limit().await;
 }
 
 #[tokio::test]
 async fn test_get_most_favorited_staff() {
-    rate_limit().await;
-
     let client = AniListClient::new();
-    let result = client.staff().get_most_favorited(1, 5).await;
+    let result = crate::staff_api_call!(client, get_most_favorited, 1, 5);
 
-    assert!(result.is_ok());
-    let staff_list = result.unwrap();
+    let staff_list = result.expect("Failed to get most favorited staff");
     assert!(!staff_list.is_empty());
 
     // Check that staff are ordered by favorites (descending)
@@ -117,6 +91,4 @@ async fn test_get_most_favorited_staff() {
             prev_favorites = favourites;
         }
     }
-
-    rate_limit().await;
 }

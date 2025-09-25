@@ -1,12 +1,12 @@
 use anilist_sdk::client::AniListClient;
+mod test_utils;
 
 #[tokio::test]
 async fn test_get_recent_threads() {
     let client = AniListClient::new();
-    let result = client.forum().get_recent_threads(1, 5).await;
+    let result = crate::forum_api_call!(client, get_recent_threads, 1, 5);
 
-    assert!(result.is_ok());
-    let threads = result.unwrap();
+    let threads = result.expect("Failed to get recent threads");
     // Note: This might be empty if there are no recent threads
 
     for thread in &threads {
@@ -18,11 +18,10 @@ async fn test_get_recent_threads() {
 #[tokio::test]
 async fn test_search_threads() {
     let client = AniListClient::new();
-    let result = client.forum().search_threads("anime", 1, 5).await;
+    let result = crate::forum_api_call!(client, search_threads, "anime", 1, 5);
     println!("Search result: {:?}", result);
 
-    assert!(result.is_ok());
-    let threads = result.unwrap();
+    let threads = result.expect("Failed to search threads");
     // Note: This might be empty if no threads match the search
 
     for thread in &threads {
@@ -35,7 +34,7 @@ async fn test_search_threads() {
 async fn test_get_thread_by_id() {
     let client = AniListClient::new();
     // This test might fail if the specific thread doesn't exist
-    let result = client.forum().get_thread_by_id(1).await;
+    let result = crate::forum_api_call!(client, get_thread_by_id, 1);
 
     // We just check that the call doesn't panic
     match result {
@@ -53,7 +52,7 @@ async fn test_get_thread_by_id() {
 async fn test_get_thread_comments() {
     let client = AniListClient::new();
     // This test might fail if the specific thread doesn't exist or has no comments
-    let result = client.forum().get_thread_comments(1, 1, 5).await;
+    let result = crate::forum_api_call!(client, get_thread_comments, 1, 1, 5);
 
     // We just check that the call doesn't panic
     match result {
