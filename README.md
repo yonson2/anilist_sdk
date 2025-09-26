@@ -79,7 +79,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-anilist_sdk = "0.1.12"
+anilist_sdk = "0.1.13"
 tokio = { version = "1.0", features = ["full"] }
 ```
 

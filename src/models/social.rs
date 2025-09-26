@@ -131,14 +131,14 @@ pub struct Review {
     pub media: Option<ReviewMedia>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaType {
     Anime,
     Manga,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ReviewRating {
     NoVote,
@@ -184,7 +184,7 @@ pub struct Recommendation {
     pub user: Option<RecommendationUser>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum RecommendationRating {
     NoRating,
@@ -203,7 +203,7 @@ pub struct RecommendationMedia {
     pub average_score: Option<i32>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaFormat {
     Tv,
@@ -274,7 +274,7 @@ pub struct Activity {
     pub site_url: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ActivityType {
     Text,
@@ -411,7 +411,7 @@ pub struct Notification {
     pub user: Option<NotificationUser>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum NotificationType {
     ActivityMessage,

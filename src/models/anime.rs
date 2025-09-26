@@ -136,7 +136,7 @@ pub struct FuzzyDate {
     pub day: Option<i32>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaFormat {
     Tv,
@@ -151,7 +151,7 @@ pub enum MediaFormat {
     OneShot,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaStatus {
     Finished,
@@ -161,7 +161,7 @@ pub enum MediaStatus {
     Hiatus,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaSeason {
     Winter,
@@ -170,7 +170,7 @@ pub enum MediaSeason {
     Fall,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaSource {
     Original,

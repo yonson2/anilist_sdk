@@ -27,7 +27,7 @@ pub struct MediaList {
     pub media: Option<MediaListMedia>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MediaListStatus {
     Current,
